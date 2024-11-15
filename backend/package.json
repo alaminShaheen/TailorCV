@@ -1,0 +1,49 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc --build",
+    "start": "node dist/index.js",
+    "test-db": "npm run build && ts-node src/test.ts",
+    "dev": "nodemon"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/module-alias": "^2.0.4",
+    "@types/node": "^22.9.0",
+    "nodemon": "^3.1.7",
+    "prettier": "^3.3.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^9.2.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "express-validator": "^7.2.0",
+    "firebase": "^11.0.1",
+    "firebase-admin": "^12.7.0",
+    "module-alias": "^2.2.3",
+    "uuid": "^11.0.3"
+  },
+  "_moduleAliases": {
+    "@/utils": "dist/utils",
+    "@/middlewares": "dist/middlewares",
+    "@/models": "dist/models",
+    "@/exceptions": "dist/exceptions",
+    "@/controllers": "dist/controllers",
+    "@/constants": "dist/constants",
+    "@/services": "dist/services",
+    "@/repositories": "dist/repositories",
+    "@/routers": "dist/routers",
+    "@/configs": "dist/configs",
+    "@/errors": "dist/errors"
+  }
+}
