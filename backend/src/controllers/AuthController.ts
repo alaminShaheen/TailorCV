@@ -27,13 +27,13 @@ async function registerHandler(request: Request<{}, {}, RegisterUserDto>, respon
 }
 
 async function registerOAuthHandler(request: Request, response: Response, next: NextFunction) {
-    // try {
-    //     const user = await AuthService.registerOAuthUser(request.userInfo);
-    //     response.status(200).json(user);
-    //     return;
-    // } catch (error: any) {
-    //     next(error);
-    // }
+    try {
+        const user = await AuthService.registerOAuthUser(request.userInfo);
+        response.status(200).json(user);
+        return;
+    } catch (error: any) {
+        next(error);
+    }
 }
 
 // Todo: Write Controller for writing to db for users logging with Google or Facebook auth

@@ -11,7 +11,7 @@ import { CLIENT_ORIGIN, SERVER_PORT } from "@/configs/config";
 const app = express();
 app.use(cors({
     origin: CLIENT_ORIGIN,
-    allowedHeaders: ['Content-Type', 'Authorization']
+    allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 app.use(express.json());
 
@@ -19,6 +19,8 @@ const appRouter = router();
 
 
 app.use(loggingHandler);
+
+logging.log(CLIENT_ORIGIN, "sakib")
 
 app.options("*", cors({
     origin: CLIENT_ORIGIN,

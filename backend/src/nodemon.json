@@ -1,6 +1,6 @@
 {
   "ignore": [".git", "node_modules", "dist"],
   "watch": ["./src"],
-  "exec": "NODE_ENV=dev&& npm run build && ts-node ./src/index.ts",
+  "exec": "npm build && ts-node ./src/index.ts",
   "ext": "ts"
 }
