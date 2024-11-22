@@ -10,14 +10,6 @@ import React, { ReactNode, useCallback } from "react";
 import { cn } from "@/lib/utils";
 import { ROUTES } from "@/constants/Routes";
 import { Button, buttonVariants } from "@/components/ui/button";
-import {
-    DropdownMenu,
-    DropdownMenuCheckboxItem,
-    DropdownMenuContent, DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu";
 import { useAuthContext } from "@/contexts/AuthContext";
 import { auth } from "@/firebaseConfig";
 import { signOut } from "firebase/auth";
@@ -69,7 +61,8 @@ const AuthLayout = (props: AuthLayoutProps) => {
                         title={resolvedTheme === "dark" ? "Toggle dark mode" : "Toggle light mode"}>
                     {resolvedTheme === "dark" ? <Sun /> : <Moon />}
                 </Button>
-                <Button variant="destructive" onClick={onLogout} className={cn(buttonVariants({ variant: "ghost" }))} title="Logout">
+                <Button variant="destructive" onClick={onLogout} className={cn(buttonVariants({ variant: "ghost" }))}
+                        title="Logout">
                     Logout
                 </Button>
             </div>
@@ -81,7 +74,9 @@ const AuthLayout = (props: AuthLayoutProps) => {
                 <Image src={resolveLogo()} alt="logo" width={40} height={40} />
                 TailorCV
             </div>
-            {children}
+            <div className="absolute top-20 w-full">
+                {children}
+            </div>
         </div>
     );
 };

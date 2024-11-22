@@ -55,7 +55,7 @@ const LoginForm = () => {
             }
 
             reset({ email: "", password: "" });
-            router.push(ROUTES.RESUMES);
+            router.push(ROUTES.ALL_RESUMES);
         } catch (error: unknown) {
             handleErrors<LoginFormModel>(error, setError);
         } finally {
