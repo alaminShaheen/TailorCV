@@ -82,6 +82,18 @@ async function deleteResume(resumeId: string): Promise<boolean> {
     }
 }
 
+async function updateResume(resumeId: string, resumeData: Partial<Resume>): Promise<Resume> {
+    try {
+        const resumeMetadata =  await ResumeRepository.updateResume(resumeId, resumeData);
+
+        if (!resumeMetadata) {
+            throw new AppError(400, "Resume not found");
+        }
+        return resumeMetadata;
+    } catch (error) {
+        throw error;
+    }
+}
 
 export const ResumeService = {
     createBlankResume,
@@ -89,4 +101,5 @@ export const ResumeService = {
     getResume,
     renameResumeTitle,
     deleteResume,
+    updateResume,
 };

@@ -1,11 +1,10 @@
+"use client";
+
 import React from "react";
+import GeneralInformation from "@/components/ResumeEditor/GeneralInformation";
 
 const ResumePage = () => {
-    return (
-        <div>
-
-        </div>
-    );
+    return <GeneralInformation />;
 };
 
 export default ResumePage;

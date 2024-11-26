@@ -4,12 +4,13 @@ import { ResumeService } from "@/services/ResumeService";
 import { BlankResumeRequestDto } from "@/models/dtos/BlankResumeRequestDto";
 import { ResumeMetadata } from "@/models/resume/ResumeMetadata";
 import { RenameResumeTitleRequestDto } from "@/models/dtos/RenameResumeTitleRequestDto";
+import { Resume } from "@/models/Resume";
 
-async function getResume(request: Request<{ id: string }, {}, {}>, response: Response, next: NextFunction) {
+async function getResume(request: Request<{ id: string }, {}, {}>, response: Response<Resume>, next: NextFunction) {
     try {
         handleFormValidationErrors(request);
-        const resume = ResumeService.getResume(request.userInfo.uid, request.params.id);
-        // response.status(200).json(loginResponse);
+        const resume = await ResumeService.getResume(request.userInfo.uid, request.params.id);
+        response.status(200).json(resume);
     } catch (error) {
         next(error);
     }
@@ -56,10 +57,21 @@ async function deleteResume(request: Request<{ id: string }, {}, {}>, response: 
     }
 }
 
+async function updateResume(request: Request<{ id: string }, {}, Partial<Resume>>, response: Response<Resume>, next: NextFunction) {
+    try {
+        handleFormValidationErrors(request);
+        const updatedResume = await ResumeService.updateResume(request.params.id, request.body);
+        response.status(200).json(updatedResume);
+    } catch (error) {
+        next(error);
+    }
+}
+
 export const ResumeController = {
     createBlankResume,
     getAllResumeMetadata,
     getResume,
     renameTitle,
     deleteResume,
+    updateResume,
 };

@@ -26,7 +26,7 @@ export const useCreateBlankResume = (props: UseCreateBlankResumeProps) => {
             onSuccess(response);
             queryClient.setQueryData<ResumeMetadata[], string[], ResumeMetadata[]>([QUERY_KEYS.FETCH_ALL_RESUME_METADATA], (oldResumeMetadata) => {
                 if (oldResumeMetadata && oldResumeMetadata.length > 0) {
-                    return oldResumeMetadata.concat(response);
+                    return [response].concat(oldResumeMetadata);
                 }
                 return [response];
             });

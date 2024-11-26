@@ -23,7 +23,10 @@ export class FirebaseDbResume {
         userId: "",
         updatedAt: Timestamp.now(),
         createdAt: Timestamp.now(),
-        title: ""
+        title: "",
+        themeColor: "#2ECC71",
+        thumbnail: "",
+        summary: "",
     });
     public id: string;
     public personalInformation: PersonalInformation;
@@ -35,6 +38,9 @@ export class FirebaseDbResume {
     public updatedAt: Timestamp;
     public userId: string;
     public title: string;
+    public themeColor: string;
+    public thumbnail: string;
+    public summary: string;
 
     constructor(params: FirebaseDbResumeParams) {
         this.id = params.id || uuidv4().toString();
@@ -47,5 +53,8 @@ export class FirebaseDbResume {
         this.createdAt = Timestamp.now();
         this.updatedAt = Timestamp.now();
         this.title = params.title || "Untitled Resume";
+        this.themeColor = params.themeColor || "#2ECC71";
+        this.thumbnail = params.thumbnail || "";
+        this.summary = params.summary;
     }
 }

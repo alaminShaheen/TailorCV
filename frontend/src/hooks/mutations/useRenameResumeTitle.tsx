@@ -8,7 +8,7 @@ import { renameResumeTitle } from "@/services/RenameResumeTitle";
 import { RenameResumeTitleRequest } from "@/services/RenameResumeTitleRequest";
 
 type UseDeleteResumeProps = {
-    onSuccess: (response: ResumeMetadata) => void;
+    onSuccess?: (response: ResumeMetadata) => void;
     resumeId: string;
 }
 
@@ -23,7 +23,7 @@ export const useRenameResumeTitle = (props: UseDeleteResumeProps) => {
             return response.data;
         },
         onSuccess: (response) => {
-            onSuccess(response);
+            onSuccess?.(response);
             queryClient.setQueryData<ResumeMetadata[], string[], ResumeMetadata[]>([QUERY_KEYS.FETCH_ALL_RESUME_METADATA], (oldResumeMetadata) => {
                 if (oldResumeMetadata && oldResumeMetadata.length > 0) {
                     return oldResumeMetadata.map(oldResume => {
@@ -41,6 +41,8 @@ export const useRenameResumeTitle = (props: UseDeleteResumeProps) => {
             });
 
         },
-        onError: (error) => handleErrors(error)
+        onError: (error) => {
+            handleErrors(new Error("An error occurred while updating resume title"));
+        }
     });
 };

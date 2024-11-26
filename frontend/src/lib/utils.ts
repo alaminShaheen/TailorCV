@@ -17,3 +17,8 @@ export function toastDateFormat(date: Date) {
     hour12: true
   }).format(date)}`;
 }
+
+export const formatFileName = (title: string, useHyphen: boolean = true) => {
+  const delimiter = useHyphen ? "-" : "_";
+  return title.trim().replace(/\s+/g, delimiter) + "pdf";
+};

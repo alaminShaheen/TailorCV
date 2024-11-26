@@ -3,4 +3,5 @@ export type ResumeMetadata = {
     createdAt: string;
     updatedAt: string;
     title: string;
+    thumbnail: string;
 }

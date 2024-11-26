@@ -65,7 +65,7 @@ const ResumeItem = (props: ResumeItemProps) => {
 
     const viewResume = useCallback((event: MouseEvent<HTMLDivElement>) => {
         event.preventDefault();
-        router.push(`/resume/${id}`);
+        router.push(ROUTES.RESUME(id));
     }, [router]);
 
     const onMoreOptionsClick = useCallback((event: MouseEvent<HTMLButtonElement>) => {

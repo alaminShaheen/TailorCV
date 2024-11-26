@@ -4,6 +4,7 @@ import { Experience } from "@/models/resume/Experience";
 import { PersonalInformation } from "@/models/resume/PersonalInformation";
 
 export type ResumeParameters = {
+    summary: string;
     id?: string;
     experiences: Experience[];
     personalInformation: PersonalInformation;
@@ -14,4 +15,6 @@ export type ResumeParameters = {
     updatedAt?: Date;
     userId: string;
     title?: string;
+    themeColor?: string;
+    thumbnail?: string;
 }

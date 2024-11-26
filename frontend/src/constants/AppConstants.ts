@@ -1,0 +1,3 @@
+export const APP_CONSTANTS = {
+    RESUME_DEFAULT_THEME: "#2ECC71",
+};

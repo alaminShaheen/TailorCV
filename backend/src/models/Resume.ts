@@ -17,6 +17,9 @@ export class Resume {
     public updatedAt: Date;
     public userId: string;
     public title: string;
+    public themeColor: string;
+    public thumbnail: string;
+    public summary: string;
 
 
     constructor(params: ResumeParameters) {
@@ -30,6 +33,9 @@ export class Resume {
         this.personalInformation = params.personalInformation;
         this.userId = params.userId;
         this.title = params.title || "Untitled Resume";
+        this.themeColor = params.themeColor || "#2ECC71";
+        this.thumbnail = params.thumbnail || "";
+        this.summary = params.summary
     }
 
     static GET_EMPTY_RESUME() {
@@ -43,7 +49,9 @@ export class Resume {
             experiences: [],
             projects: [],
             education: [],
-            userId: ""
+            userId: "",
+            thumbnail: "",
+            summary: "",
         });
 
     }

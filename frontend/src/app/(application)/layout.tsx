@@ -14,6 +14,7 @@ import { useAuthContext } from "@/contexts/AuthContext";
 import { auth } from "@/firebaseConfig";
 import { signOut } from "firebase/auth";
 import { useErrorHandler } from "@/hooks/useErrorHandler";
+import { ResumeContextProvider } from "@/contexts/ResumeContext";
 
 type AuthLayoutProps = Readonly<{ children: ReactNode }>;
 
@@ -75,7 +76,9 @@ const AuthLayout = (props: AuthLayoutProps) => {
                 TailorCV
             </div>
             <div className="absolute top-20 w-full">
-                {children}
+                <ResumeContextProvider>
+                    {children}
+                </ResumeContextProvider>
             </div>
         </div>
     );

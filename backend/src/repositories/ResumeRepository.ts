@@ -6,6 +6,7 @@ import { FirebaseDbResume } from "@/models/FirebaseDbResume";
 import { getDatabaseInstance } from "../database";
 import { DATABASE_CONSTANTS } from "@/constants/databaseConstants";
 import { RenameResumeTitleRequestDto } from "@/models/dtos/RenameResumeTitleRequestDto";
+import logging from "@/utils/logging";
 
 const firestoreResumeConverter = {
     toFirestore: function(resume: Resume) {
@@ -121,10 +122,29 @@ async function updateResumeTitle(resumeData: RenameResumeTitleRequestDto, userId
         return {
             title: resumeData.title,
             updatedAt: new Date(),
-            createdAt: data.updatedAt,
+            createdAt: new Date(data.updatedAt),
             id: data.id
         } satisfies ResumeMetadata;
 
+    } catch (error) {
+        throw error;
+    }
+}
+
+async function updateResume(resumeId: string, resumeData: Partial<Resume>): Promise<Resume | null> {
+    try {
+        const resumesSnapshot = await getResumeSnapshot(resumeId);
+
+        if (!resumesSnapshot) {
+            return null;
+        }
+
+        logging.log(resumeData);
+
+        await resumesSnapshot.ref.update({ ...resumeData, updatedAt: new Date() });
+        const updateResume = await resumesSnapshot.ref.get();
+
+        return updateResume.data() || null;
     } catch (error) {
         throw error;
     }
@@ -136,5 +156,6 @@ export const ResumeRepository = {
     getAllResumes,
     getResume,
     updateResumeTitle,
-    deleteResume
+    deleteResume,
+    updateResume,
 };

@@ -10,8 +10,9 @@ export default (router: Router, baseApiUrl: string = "/") => {
     resumeRouter.get("/all", verifyAuthentication, ResumeController.getAllResumeMetadata);
     resumeRouter.post("/blank", verifyAuthentication, ResumeController.createBlankResume);
     resumeRouter.post("/:id/rename", verifyAuthentication, resumeTitleValidator(), ResumeController.renameTitle);
-    resumeRouter.get("/:id", verifyAuthentication, ResumeController.getResume);
+    resumeRouter.get("/:id", verifyAuthentication, ResumeController.getResume)
     resumeRouter.delete("/:id", verifyAuthentication, ResumeController.deleteResume);
+    resumeRouter.put("/:id", verifyAuthentication, ResumeController.updateResume);
 
     router.use(baseApiUrl, resumeRouter);
     return router;
