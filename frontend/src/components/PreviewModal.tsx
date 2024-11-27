@@ -14,7 +14,7 @@ const PreviewModal = () => {
                 <Button
                     disabled={isLoading}
                     variant="secondary"
-                    className="bg-white border gap-1 dark:bg-gray-800 !p-2 w-9 lg:w-auto lg:p-4">
+                    className="bg-white border gap-1 dark:bg-gray-800 !p-2 w-9 lg:w-auto lg:p-4 hidden md:block">
                     <div className="flex items-center gap-1">
                         <Eye size="17px" />
                         <span className="hidden lg:flex">Preview</span>

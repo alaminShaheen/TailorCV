@@ -75,7 +75,7 @@ const AuthLayout = (props: AuthLayoutProps) => {
                 <Image src={resolveLogo()} alt="logo" width={40} height={40} />
                 TailorCV
             </div>
-            <div className="absolute top-20 w-full">
+            <div className="absolute top-20 w-full bottom-0">
                 <ResumeContextProvider>
                     {children}
                 </ResumeContextProvider>

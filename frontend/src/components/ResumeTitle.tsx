@@ -33,7 +33,7 @@ const ResumeTitle = (props: ResumeTitleProps) => {
         <div className="flex items-center gap-1 pr-4">
             <FileText className="stroke-primary" size="20px" />
             <h5
-                className={cn(`text-[20px] px-1 text-gray-700 dark:text-gray-300 font-semibold opacity-100 border-2 rounded-md border-transparent hover:border-amber-400`,
+                className={cn(`text-base truncate w-[170px] md:w-fit md:text-[20px] px-1 text-gray-700 dark:text-gray-300 font-semibold opacity-100 border-2 rounded-md border-transparent hover:border-amber-400`,
                     {
                         "!opacity-70 !pointer-events-none":
                             isLoading === true

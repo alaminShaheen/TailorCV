@@ -17,11 +17,11 @@ const ResumeEditorLayout = (props: ResumeEditorLayoutProps) => {
     const { isLoading } = useResumeContext();
 
     return (
-        <div className="relative w-full">
-            <div className="w-full mx-auto py-4 px-8 h-full">
+        <div className="relative w-full h-full">
+            <div className="w-full mx-auto py-4 px-8 flex flex-col h-full">
                 <ResumeHeader />
-                <main className="relative grow flex">
-                    <div className="absolute bottom-0 top-0 flex w-full">
+                <main className="relative grow">
+                    <div className="absolute bottom-0 top-0 flex flex-col md:flex-row  w-full">
                         {/* {Form Section} */}
                         <div className="w-full space-y-6 overflow-y-auto p-3 md:block md:w-1/2">
                             <ResumeFormBreadcrumbs currentStep={currentStep} setCurrentStep={setCurrentStep} />
@@ -36,8 +36,6 @@ const ResumeEditorLayout = (props: ResumeEditorLayoutProps) => {
                 <Footer
                     currentStep={currentStep}
                     setCurrentStep={setCurrentStep}
-                    showSmResumePreview={showSmResumePreview}
-                    setShowSmResumePreview={setShowSmResumePreview}
                     isSaving={isLoading}
                 />
             </div>

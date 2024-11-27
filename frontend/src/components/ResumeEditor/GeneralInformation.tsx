@@ -1,17 +1,20 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { PersonalInformation, Resume } from "@/models/Resume";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+
 import { Input } from "@/components/ui/input";
+import { useResumeContext } from "@/contexts/ResumeContext";
+import { PersonalInformation } from "@/models/Resume";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 
 const GeneralInformation = () => {
+    const { resumeInfo, updateResumeReflection } = useResumeContext();
 
     const form = useForm<PersonalInformation>({
         defaultValues: {
-            email: "",
-            linkedInProfileUrl: "",
-            name: "",
-            githubProfileUrl: ""
+            email: resumeInfo.personalInformation.email || "",
+            linkedInProfileUrl: resumeInfo.personalInformation.linkedInProfileUrl || "",
+            name: resumeInfo.personalInformation.name || "",
+            githubProfileUrl: resumeInfo.personalInformation.githubProfileUrl || ""
         }
     });
 
@@ -39,7 +42,16 @@ const GeneralInformation = () => {
                             <FormItem>
                                 <FormLabel>Name</FormLabel>
                                 <FormControl>
-                                    <Input {...field} />
+                                    <Input {...field} onChange={event => {
+                                        updateResumeReflection(prev => ({ ...prev,
+                                            personalInformation: {
+                                                ...prev.personalInformation,
+                                                name: event.target.value
+                                            }
+                                        }));
+                                        field.onChange(event);
+                                    }} />
+
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>

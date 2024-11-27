@@ -19,7 +19,7 @@ export const useFetchResume = (props: UseFetchResumeProps) => {
                 const response = await fetchResume(resumeId);
                 return response.data;
             },
-            enabled
+            enabled,
         }
     );
 };

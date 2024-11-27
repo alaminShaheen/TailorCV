@@ -10,32 +10,18 @@ import { generateResumeThumbnail } from "@/lib/generateResumeThumbnail";
 import { toast } from "sonner";
 import { toastDateFormat } from "@/lib/utils";
 
-const ResumeTheme = () => {
-    const { resumeInfo, updateResume } = useResumeContext();
+type ResumeThemeProps = {
+    onThemeSelect: (color: string) => Promise<void>;
+}
+
+const ResumeTheme = (props: ResumeThemeProps) => {
+    const {onThemeSelect} = props;
     const [selectedTheme, setSelectedTheme] = useDebounceValue(APP_CONSTANTS.RESUME_DEFAULT_THEME, 500);
 
-    const onColorSelect = useCallback(async (color: string) => {
-            setSelectedTheme(color);
-
-            if (!resumeInfo) return;
-            try {
-                const thumbnail = await generateResumeThumbnail();
-
-                if (!thumbnail) throw new Error();
-
-                updateResume({
-                    themeColor: color,
-                    thumbnail,
-                });
-            } catch (error) {
-                toast.error("An unexpected error occurred.", {
-                    richColors: true,
-                    description: toastDateFormat(new Date()),
-                });
-            }
-        },
-        [resumeInfo, updateResume]
-    );
+    const onThemeClick = useCallback((theme: string) => {
+        setSelectedTheme(theme);
+        onThemeSelect(theme);
+    }, []);
 
     return (
         <Popover>
@@ -61,7 +47,7 @@ const ResumeTheme = () => {
                         <div
                             role="button"
                             key={index}
-                            onClick={() => onColorSelect(item)}
+                            onClick={() => onThemeClick(item)}
                             className={`h-5 w-8 rounded-[5px] hover:border-black border
 
                           ${selectedTheme === item && "border border-black"}

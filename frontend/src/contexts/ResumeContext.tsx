@@ -1,28 +1,40 @@
 "use client";
 
-import { createContext, ReactNode, useCallback, useContext } from "react";
-import { Resume } from "@/models/Resume";
-import { useFetchResume } from "@/hooks/queries/useFetchResume";
-import { useParams } from "next/navigation";
-import { useUpdateResume } from "@/hooks/mutations/useUpdateResume";
+import {
+    createContext,
+    Dispatch,
+    ReactNode,
+    SetStateAction,
+    useCallback,
+    useContext,
+    useEffect,
+    useState
+} from "react";
 import { toast } from "sonner";
+import { useParams } from "next/navigation";
+
+import { Resume } from "@/models/Resume";
+import { APP_CONSTANTS } from "@/constants/AppConstants";
+import { useFetchResume } from "@/hooks/queries/useFetchResume";
+import { useUpdateResume } from "@/hooks/mutations/useUpdateResume";
 import { toastDateFormat } from "@/lib/utils";
 
 type ResumeContextType = {
-    resumeInfo?: Resume;
+    resumeInfo: Resume;
     isLoading: boolean;
     isError: boolean;
     isSuccess: boolean;
-    // refetch: () => void;
-    updateResume: (data: Partial<Resume>) => void;
+    saveResume: (data: Partial<Resume>) => void;
+    updateResumeReflection: Dispatch<SetStateAction<Resume>>
 };
 
 const RESUME_CONTEXT_DEFAULT_VALUES: ResumeContextType = {
-    resumeInfo: undefined,
+    resumeInfo: APP_CONSTANTS.EMPTY_RESUME,
     isLoading: false,
     isSuccess: false,
     isError: false,
-    updateResume: () => null
+    saveResume: () => null,
+    updateResumeReflection: () => null
 };
 
 export const ResumeContext = createContext<ResumeContextType>(RESUME_CONTEXT_DEFAULT_VALUES);
@@ -34,8 +46,9 @@ type ResumeContextProviderProps = {
 export const ResumeContextProvider = (props: ResumeContextProviderProps) => {
     const { children } = props;
     const params = useParams<{ id: string }>();
+    const [reflectedChanges, setReflectedChanges] = useState<Resume>(RESUME_CONTEXT_DEFAULT_VALUES.resumeInfo);
 
-    const onUpdateSuccess = useCallback(() => {
+    const onUpdateSuccess = useCallback((updatedResume: Resume) => {
         toast.success("Resume updated successfully.", {
             description: toastDateFormat(new Date()),
             action: {
@@ -43,6 +56,7 @@ export const ResumeContextProvider = (props: ResumeContextProviderProps) => {
                 onClick: () => null
             }
         });
+        setReflectedChanges(updatedResume);
     }, []);
 
     const { data: resumeData, isError, isLoading, isSuccess } = useFetchResume({
@@ -51,13 +65,20 @@ export const ResumeContextProvider = (props: ResumeContextProviderProps) => {
     });
     const { mutate, isPending } = useUpdateResume({ resumeId: params.id, onSuccess: onUpdateSuccess });
 
+    useEffect(() => {
+        if (isSuccess) {
+            setReflectedChanges(resumeData);
+        }
+    }, [resumeData, isSuccess]);
+
     return (
         <ResumeContext.Provider value={{
-            resumeInfo: resumeData,
+            resumeInfo: reflectedChanges,
+            updateResumeReflection: setReflectedChanges,
             isError,
             isSuccess,
             isLoading: isLoading || isPending,
-            updateResume: mutate
+            saveResume: mutate
         }}>
             {children}
         </ResumeContext.Provider>
