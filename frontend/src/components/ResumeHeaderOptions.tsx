@@ -7,7 +7,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
-import { DownloadCloud, Ellipsis, Eye, Trash2 } from "lucide-react";
+import { DownloadCloud, Ellipsis, Eye, Save, Trash2 } from "lucide-react";
 
 type ResumeHeaderOptionsProps = {
     handleDownload: () => Promise<void>;
@@ -38,6 +38,12 @@ const ResumeHeaderOptions = (props: ResumeHeaderOptionsProps) => {
                         <Trash2 size="17px" />
                         <span className="lg:flex">
                             Delete
+                        </span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className="flex items-center gap-2" onClick={onDelete}>
+                        <Save size="17px" />
+                        <span className="lg:flex">
+                            Save
                         </span>
                     </DropdownMenuItem>
                 </DropdownMenuGroup>

@@ -5,6 +5,7 @@ import { Experience } from "@/models/resume/Experience";
 import { Project } from "@/models/resume/Project";
 import { Education } from "@/models/resume/Education";
 import { ResumeParameters } from "@/models/ResumeParameters";
+import { Skills } from "@/models/resume/Skills";
 
 type FirebaseDbResumeParams = Omit<ResumeParameters, "createdAt" | "updatedAt"> & {
     createdAt: Timestamp;
@@ -17,9 +18,9 @@ export class FirebaseDbResume {
         id: "",
         education: [],
         experiences: [],
-        technicalSkills: {},
+        technicalSkills: [],
         projects: [],
-        personalInformation: { email: "", name: "", githubProfileUrl: "", linkedInProfileUrl: "" },
+        personalInformation: { email: "", name: "", githubProfileUrl: "", linkedInProfileUrl: "", personalWebsite: "", phoneNumber: "", homeAddress: "" },
         userId: "",
         updatedAt: Timestamp.now(),
         createdAt: Timestamp.now(),
@@ -32,7 +33,7 @@ export class FirebaseDbResume {
     public personalInformation: PersonalInformation;
     public experiences: Experience[];
     public projects: Project[];
-    public technicalSkills: Record<string, string[]>;
+    public technicalSkills: {skillName: string, skills: Skills}[];
     public education: Education[];
     public createdAt: Timestamp;
     public updatedAt: Timestamp;
@@ -46,7 +47,7 @@ export class FirebaseDbResume {
         this.id = params.id || uuidv4().toString();
         this.education = params.education;
         this.experiences = params.experiences;
-        this.technicalSkills = params.technicalSkills || {};
+        this.technicalSkills = params.technicalSkills || [];
         this.projects = params.projects;
         this.personalInformation = params.personalInformation;
         this.userId = params.userId;

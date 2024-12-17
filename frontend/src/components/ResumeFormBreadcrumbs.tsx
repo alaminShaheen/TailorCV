@@ -10,24 +10,24 @@ import {
 import { ResumeFormSteps } from "@/constants/ResumeFormSteps";
 
 type BreadcrumbsProps = {
-    currentStep: string;
-    setCurrentStep: (step: string) => void;
+    currentStepIndex: number;
+    setCurrentStepIndex: (index: number) => void;
 }
 
 const ResumeFormBreadcrumbs = (props: BreadcrumbsProps) => {
-    const {currentStep, setCurrentStep} = props;
+    const {currentStepIndex, setCurrentStepIndex} = props;
     return (
         <div className="flex justify-center">
             <Breadcrumb>
                 <BreadcrumbList>
-                    {ResumeFormSteps.map((step) => (
+                    {ResumeFormSteps.map((step, index) => (
                         <React.Fragment key={step.key}>
                             <BreadcrumbItem>
-                                {step.key === currentStep ? (
+                                {index === currentStepIndex ? (
                                     <BreadcrumbPage>{step.title}</BreadcrumbPage>
                                 ) : (
                                     <BreadcrumbLink asChild>
-                                        <button onClick={() => setCurrentStep(step.key)}>
+                                        <button onClick={() => setCurrentStepIndex(index)}>
                                             {step.title}
                                         </button>
                                     </BreadcrumbLink>
@@ -39,6 +39,7 @@ const ResumeFormBreadcrumbs = (props: BreadcrumbsProps) => {
                 </BreadcrumbList>
             </Breadcrumb>
         </div>
+
     );
 };
 

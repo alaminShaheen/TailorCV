@@ -16,5 +16,7 @@ export const APP_CONSTANTS = {
         experiences: [],
         education: [],
         themeColor: ""
-    } satisfies Resume
+    } satisfies Resume,
+    GITHUB_URL_REGEX: /^(https?:\/\/)?(www\.)?github\.com\/[a-zA-Z0-9-]{1,39}(\/.*)?$/,
+    LINKEDIN_URL_REGEX: /^(https?:\/\/)?(www\.)?linkedin\.com\/(in|pub|company)\/[a-zA-Z0-9-._~]+(\/.*)?$/
 };

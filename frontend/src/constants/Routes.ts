@@ -5,5 +5,6 @@ export const ROUTES = {
     PASSWORD_RESET: '/passwordReset',
     ALL_RESUMES: '/resumes',
     RESUME: (id: string) => `/resumes/${id}`,
+    WORK_EXPERIENCE: 'work-experience'
 
 }

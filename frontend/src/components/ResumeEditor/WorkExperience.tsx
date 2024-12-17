@@ -1,30 +1,24 @@
-import React, { useCallback, useEffect } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { ResumeFormSteps } from "@/constants/ResumeFormSteps";
 import { useResumeContext } from "@/contexts/ResumeContext";
-import GeneralInformationSkeleton from "@/components/ResumeEditor/Skeletons/GeneralInformationSkeleton";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Textarea } from "@/components/ui/textarea";
 import { GeneralInformation as GeneralInformationModel } from "@/models/forms/GeneralInformation";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { APP_CONSTANTS } from "@/constants/AppConstants";
-import { normalizeURL } from "@/lib/Url";
 
-const GeneralInformation = () => {
-    const { resumeInfo, updateResumeReflection, isLoading, saveResume } = useResumeContext();
+const WorkExperience = () => {
+    const { resumeInfo, updateResumeReflection } = useResumeContext();
 
-    const form = useForm<GeneralInformationModel>(
-        {
-            defaultValues: {
-                email: resumeInfo.personalInformation.email || "",
-                linkedInProfileUrl: resumeInfo.personalInformation.linkedInProfileUrl || "",
-                name: resumeInfo.personalInformation.name || "",
-                githubProfileUrl: resumeInfo.personalInformation.githubProfileUrl || "",
-                summary: resumeInfo.summary || ""
-            }
+    const form = useForm<GeneralInformationModel>({
+        defaultValues: {
+            email: resumeInfo.personalInformation.email || "",
+            linkedInProfileUrl: resumeInfo.personalInformation.linkedInProfileUrl || "",
+            name: resumeInfo.personalInformation.name || "",
+            githubProfileUrl: resumeInfo.personalInformation.githubProfileUrl || "",
+            summary: resumeInfo.summary || ""
         }
-    );
+    });
 
     const {
         register,
@@ -34,41 +28,6 @@ const GeneralInformation = () => {
         reset
     } = form;
 
-    const onSubmit = useCallback((data: GeneralInformationModel) => {
-        if (data.linkedInProfileUrl) {
-            data.linkedInProfileUrl = normalizeURL(data.linkedInProfileUrl);
-        }
-
-        if (data.githubProfileUrl) {
-            data.githubProfileUrl = normalizeURL(data.githubProfileUrl);
-        }
-
-        saveResume({
-            personalInformation: {
-                githubProfileUrl: data.githubProfileUrl,
-                linkedInProfileUrl: data.linkedInProfileUrl,
-                name: data.name,
-                email: data.email
-            },
-            summary: data.summary
-        });
-    }, [saveResume]);
-
-    useEffect(() => {
-        if (!isLoading) {
-            reset({
-                email: resumeInfo.personalInformation.email || "",
-                linkedInProfileUrl: resumeInfo.personalInformation.linkedInProfileUrl || "",
-                name: resumeInfo.personalInformation.name || "",
-                githubProfileUrl: resumeInfo.personalInformation.githubProfileUrl || "",
-                summary: resumeInfo.summary || ""
-            });
-        }
-    }, [isLoading, reset, resumeInfo]);
-
-    if (isLoading) {
-        return <GeneralInformationSkeleton />;
-    }
 
     return (
         <div className="mx-auto max-w-xl space-y-6">
@@ -77,11 +36,10 @@ const GeneralInformation = () => {
                 <p className="text-sm text-muted-foreground">Tell us about yourself.</p>
             </div>
             <Form {...form}>
-                <form className="space-y-3" id={ResumeFormSteps[0].key} onSubmit={handleSubmit(saveResume)}>
+                <form className="space-y-3">
                     <FormField
                         control={form.control}
                         name="name"
-                        rules={{ required: "Name is required" }}
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Name*</FormLabel>
@@ -105,7 +63,6 @@ const GeneralInformation = () => {
                     <FormField
                         control={form.control}
                         name="email"
-                        rules={{ required: "Email is required" }}
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Email*</FormLabel>
@@ -128,12 +85,6 @@ const GeneralInformation = () => {
                     <FormField
                         control={form.control}
                         name="githubProfileUrl"
-                        rules={{
-                            pattern: {
-                                value: APP_CONSTANTS.GITHUB_URL_REGEX,
-                                message: "Invalid github url"
-                            }
-                        }}
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Github Profile URL</FormLabel>
@@ -149,9 +100,6 @@ const GeneralInformation = () => {
                                         field.onChange(event);
                                     }} />
                                 </FormControl>
-                                <FormDescription>
-                                    Example: github.com/JohnDoe
-                                </FormDescription>
                                 <FormMessage />
                             </FormItem>
                         )}
@@ -174,9 +122,6 @@ const GeneralInformation = () => {
                                         field.onChange(event);
                                     }} />
                                 </FormControl>
-                                <FormDescription>
-                                    Example: linkedin.com/in/alaminshaheen/
-                                </FormDescription>
                                 <FormMessage />
                             </FormItem>
                         )}
@@ -203,8 +148,7 @@ const GeneralInformation = () => {
                 </form>
             </Form>
         </div>
-    )
-        ;
+    );
 };
 
-export default GeneralInformation;
+export default WorkExperience;

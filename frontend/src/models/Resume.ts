@@ -3,8 +3,8 @@ import { JobType } from "@/models/enums/JobType";
 export type PersonalInformation = {
     name: string;
     email: string;
-    linkedInProfileUrl: string;
-    githubProfileUrl: string;
+    linkedInProfileUrl?: string;
+    githubProfileUrl?: string;
 }
 
 export type Experience = {
@@ -35,7 +35,7 @@ export type Education = {
 
 export type Resume = {
     id: string;
-    summary: string;
+    summary?: string;
     personalInformation: PersonalInformation;
     experiences: Experience[];
     projects: Project[];

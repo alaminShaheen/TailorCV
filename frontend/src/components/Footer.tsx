@@ -1,30 +1,22 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { ResumeFormSteps } from "@/constants/ResumeFormSteps";
-import { FileUserIcon, PenLineIcon, Save } from "lucide-react";
+import { Save } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 
 type FooterProps = {
-    currentStep: string;
-    setCurrentStep: (step: string) => void;
+    currentStepIndex: number;
+    setCurrentStepIndex: (index: number) => void;
     isSaving: boolean;
 }
 
 const Footer = (props: FooterProps) => {
-    const { currentStep, setCurrentStep, isSaving } = props;
+    const { currentStepIndex, setCurrentStepIndex, isSaving } = props;
 
-    const previousStep = ResumeFormSteps.find(
-        (_, index) => {
-            return ResumeFormSteps[index + 1]?.key === currentStep
-        }
-    )?.key;
+    const previousStep = currentStepIndex !== 0 ? currentStepIndex - 1 : null;
 
-    const nextStep = ResumeFormSteps.find(
-        (step, index) => {
-            return ResumeFormSteps[index - 1]?.key === currentStep
-        }
-    )?.key;
+    const nextStep = currentStepIndex !== ResumeFormSteps.length - 1 ? currentStepIndex + 1 : null;
 
     return (
         <footer className="w-full mt-auto border-t px-3 py-5 items-end">
@@ -33,15 +25,19 @@ const Footer = (props: FooterProps) => {
                     <Button
                         variant="secondary"
                         onClick={
-                            previousStep ? () => setCurrentStep(previousStep) : undefined
+                            previousStep ? () => setCurrentStepIndex(previousStep) : undefined
                         }
-                        disabled={!previousStep}
+                        disabled={previousStep === null}
+                        type="submit"
+                        form={ResumeFormSteps[currentStepIndex].key}
                     >
                         Previous step
                     </Button>
                     <Button
-                        onClick={nextStep ? () => setCurrentStep(nextStep) : undefined}
-                        disabled={!nextStep}
+                        onClick={nextStep ? () => setCurrentStepIndex(nextStep) : undefined}
+                        disabled={nextStep === null}
+                        type="submit"
+                        form={ResumeFormSteps[currentStepIndex].key}
                     >
                         Next step
                     </Button>

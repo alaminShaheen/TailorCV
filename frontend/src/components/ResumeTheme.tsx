@@ -20,18 +20,15 @@ const ResumeTheme = (props: ResumeThemeProps) => {
 
     const onThemeClick = useCallback((theme: string) => {
         setSelectedTheme(theme);
-        onThemeSelect(theme);
-    }, []);
+        void onThemeSelect(theme);
+    }, [onThemeSelect]);
 
     return (
         <Popover>
             <PopoverTrigger asChild>
                 <Button
                     variant="secondary"
-                    className="bg-white border gap-1
-                   dark:bg-gray-800 !p-2
-                    lg:w-auto lg:p-4"
-                >
+                    className="bg-white border gap-1 dark:bg-gray-800 !p-2 lg:w-auto lg:p-4">
                     <div className="flex items-center gap-1">
                         <Palette size="17px" />
                         <span className="hidden lg:flex">Theme</span>

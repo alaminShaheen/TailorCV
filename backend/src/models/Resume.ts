@@ -5,13 +5,14 @@ import { Education } from "@/models/resume/Education";
 import { Experience } from "@/models/resume/Experience";
 import { ResumeParameters } from "@/models/ResumeParameters";
 import { PersonalInformation } from "@/models/resume/PersonalInformation";
+import { Skills } from "@/models/resume/Skills";
 
 export class Resume {
     public id: string;
     public personalInformation: PersonalInformation;
     public experiences: Experience[];
     public projects: Project[];
-    public technicalSkills: Record<string, string[]>;
+    public technicalSkills: { skillName: string, skills: Skills }[];
     public education: Education[];
     public createdAt: Date;
     public updatedAt: Date;
@@ -28,14 +29,14 @@ export class Resume {
         this.updatedAt = new Date();
         this.education = params.education;
         this.experiences = params.experiences;
-        this.technicalSkills = params.technicalSkills || {};
+        this.technicalSkills = params.technicalSkills || [];
         this.projects = params.projects;
         this.personalInformation = params.personalInformation;
         this.userId = params.userId;
         this.title = params.title || "Untitled Resume";
         this.themeColor = params.themeColor || "#2ECC71";
         this.thumbnail = params.thumbnail || "";
-        this.summary = params.summary
+        this.summary = params.summary;
     }
 
     static GET_EMPTY_RESUME() {
@@ -44,14 +45,17 @@ export class Resume {
                 email: "johndoe@xyz.com",
                 linkedInProfileUrl: "",
                 githubProfileUrl: "",
-                name: "John Doe"
+                name: "John Doe",
+                personalWebsite: "",
+                homeAddress: "",
+                phoneNumber: ""
             },
             experiences: [],
             projects: [],
             education: [],
             userId: "",
             thumbnail: "",
-            summary: "",
+            summary: ""
         });
 
     }

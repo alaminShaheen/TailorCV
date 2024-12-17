@@ -1,6 +1,6 @@
 import jsPDF from "jspdf";
 import { toast } from "sonner";
-import { Trash2 } from "lucide-react";
+import { Save, Trash2 } from "lucide-react";
 import html2canvas from "html2canvas";
 import { useDebounceValue } from "usehooks-ts";
 import React, { useCallback, useState } from "react";
@@ -119,6 +119,14 @@ const ResumeHeader = () => {
                 />
             </div>
             <div className="flex items-center gap-2">
+                <div className="hidden md:block">
+                    <Button variant="outline">
+                        <Save />
+                        <span className="hidden lg:flex">
+                            Save
+                        </span>
+                    </Button>
+                </div>
                 {/* {ThemeColor} */}
                 <ResumeTheme onThemeSelect={onColorSelect} />
 

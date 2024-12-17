@@ -3,6 +3,10 @@ import { JobType } from "@/models/enums/JobType";
 import { CreateResumeRequestDto } from "@/models/dtos/CreateResumeRequestDto";
 import logging from "@/utils/logging";
 import OpenAI from "openai";
+import path from "path";
+import fs from "node:fs/promises";
+import { Document, VectorStoreIndex } from "llamaindex";
+import { RAGService } from "@/services/RAGService";
 
 
 const exampleResume: CreateResumeRequestDto = {
@@ -18,8 +22,12 @@ const exampleResume: CreateResumeRequestDto = {
                 designation: "Software Engineer",
                 companyName: "TechCorp",
                 companyUrl: "https://techcorp.com",
-                from: new Date("2020-01-01"),
-                to: new Date("2023-01-01"),
+                duration: {
+                    from: new Date("2020-01-01"),
+                    to: new Date("2023-01-01"),
+                    isPresent: false
+                },
+                role: "Intern",
                 location: "New York, NY",
                 jobType: JobType.IN_OFFICE,
                 jobDetails: [
@@ -30,7 +38,7 @@ const exampleResume: CreateResumeRequestDto = {
         ],
         projects: [
             {
-                name: "Project Alpha",
+                title: "Project Alpha",
                 githubUrl: "https://github.com/johndoe/project-alpha",
                 technologies: ["React", "TypeScript", "GraphQL"],
                 projectDetails: [
@@ -48,7 +56,11 @@ const exampleResume: CreateResumeRequestDto = {
                 institutionName: "Tech University",
                 degreeName: "B.Sc. in Computer Science",
                 location: "Boston, MA",
-                graduationDate: new Date("2019-05-01")
+                duration: {
+                    from: new Date("2015-04-03"),
+                    to: new Date("2019-05-01"),
+                    isPresent: false
+                }
             }
         ]
     },
@@ -90,9 +102,9 @@ async function openAIRag() {
         messages: [
             {
                 role: "system", content: `
-                    You are a job resume generator AI. 
-                    Your task is to write a professional summary for a resume given the user's provided data and the job description
-                    Only return the summary and do not include any other information in the response. Keep it concise and professional.
+                    You are a job resume generator AI. Your task is to generate a single work experience entry based on the user input.
+                    You can omit fields if they can't be inferred from the provided data, but don't add any
+                    new ones.
                 `
             },
             {
@@ -103,7 +115,7 @@ async function openAIRag() {
                     Work experience:
                     ${exampleResume.resumeInformation.experiences.map(experience => {
                     return `
-                        Position: ${experience.designation || "N/A"} at ${experience.companyName || "N/A"} from ${experience.from || "N/A"} to ${experience.to || "Present"}
+                        Position: ${experience.designation || "N/A"}  at ${experience.companyName || "N/A"} from ${experience.duration.from || "N/A"} to ${experience.duration.isPresent ? "Present" : experience.duration.to}
 
                         Description:
                         ${experience.jobDetails.map((detail, index) => `${index}. ${detail}`).join("\n\n")}
@@ -113,27 +125,30 @@ async function openAIRag() {
                     Education:
                     ${exampleResume.resumeInformation.education.map(education => {
                     return `
-                        Degree: Graduated with a ${education.degreeName || "N/A"} at ${education.institutionName || "N/A"} on ${education.graduationDate} 
+                        Degree: ${education.duration.isPresent ? `Studying ${education.degreeName || "N/A"} at ${education.institutionName || "N/A"}` : `Graduated with a ${education.degreeName || "N/A"} at ${education.institutionName || "N/A"} on ${education.duration.to}`} 
                     `;
                 })}
                     
                     Projects:
                     ${exampleResume.resumeInformation.projects.map(project => {
                     return `
-                        Created a project called ${project.name} using ${project.technologies.map(tech => tech).join(", ")}
+                        Created a project called ${project.title} using the technologies - ${project.technologies.map(tech => tech).join(", ")}
                     `;
                 })}
                 `
             }
         ]
     });
-
-    console.log(completion.choices[0].message.content);
 }
+
+const testLlamaIndex = async () => {
+    const response = await RAGService.generateResumeContent(exampleResume);
+    console.log(response);
+};
 
 async function AIResumeGeneration() {
     try {
-        const response = await openAIRag();
+        const response = await testLlamaIndex();
         logging.log(response);
     } catch (error) {
         logging.error(error);

@@ -1,7 +1,16 @@
+import { Duration, ZodDurationSchema } from "@/models/Duration";
+import { z } from "zod";
+
 export type Education = {
     institutionName: string;
-    degreeName: string;
     location: string;
-    isPresent?: boolean;
-    graduationDate: Date;
+    degreeName: string;
+    duration: Duration;
 }
+
+export const ZodEducationSchema = z.object({
+    institutionName: z.string(),
+    location: z.string(),
+    degreeName: z.string(),
+    duration: ZodDurationSchema
+})

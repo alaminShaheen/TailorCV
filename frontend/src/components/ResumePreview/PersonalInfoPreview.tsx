@@ -1,11 +1,12 @@
 "use client";
-import React, { FC } from "react";
+import React, { FC, Fragment, useCallback } from "react";
 import { APP_CONSTANTS } from "@/constants/AppConstants";
 import { Resume } from "@/models/Resume";
 import { Skeleton } from "@/components/ui/skeleton";
+import { addProtocol, isValidGithubURL, isValidLinkedinURL, normalizeURL } from "@/lib/Url";
 
 interface PropsType {
-    resumeInfo?: Resume;
+    resumeInfo: Resume;
     isLoading: boolean;
 }
 
@@ -16,34 +17,79 @@ const PersonalInfo: FC<PropsType> = ({ resumeInfo, isLoading }) => {
         return <SkeletonLoader />;
     }
 
+    const renderProfileLinks = useCallback(() => {
+        let links = resumeInfo.personalInformation.email;
+        if (resumeInfo.personalInformation.githubProfileUrl) {
+            links += ` | ${resumeInfo.personalInformation.githubProfileUrl}`;
+        }
+
+        if (resumeInfo.personalInformation.linkedInProfileUrl) {
+            links += ` | ${resumeInfo.personalInformation.linkedInProfileUrl}`;
+        }
+        return links;
+    }, [resumeInfo]);
+
     return (
         <div className="w-full min-h-14">
             <h2 className="font-bold text-xl text-center"
                 style={{
-                    color: themeColor,
+                    color: themeColor
                 }}
             >
                 {resumeInfo?.personalInformation.name || "John Doe"}{" "}
             </h2>
-            <h5 className="text-center text-sm font-medium">
-                {"Job Title"}
-            </h5>
-            <p className="text-center font-normal text-[13px]">
-                {"House Address"}
-            </p>
-
-            <div className="flex items-center justify-between pt-3">
-                <h5 className="font-normal text-[13px]">
-                    {"Phone number"}
-                </h5>
-                <h5 className="font-normal text-[13px]">
-                    {resumeInfo?.personalInformation?.email || "Email address"}
-                </h5>
-            </div>
+            <span className="flex items-center justify-center gap-2">
+                <a href={`mailto:${resumeInfo.personalInformation.email}`} className="underline font-bold">
+                    <h5 className="text-center text-sm">
+                        {resumeInfo.personalInformation.email}
+                    </h5>
+                </a>
+                {resumeInfo.personalInformation.githubProfileUrl && (
+                    <Fragment>
+                        <span>{` | `}</span>
+                        <a href={
+                            isValidGithubURL(resumeInfo.personalInformation.githubProfileUrl) ?
+                                addProtocol(resumeInfo.personalInformation.githubProfileUrl)
+                                :
+                                ""
+                        }
+                           className="underline font-bold">
+                            <h5 className="text-center text-sm">
+                                {
+                                    isValidGithubURL(resumeInfo.personalInformation.githubProfileUrl) ?
+                                        normalizeURL(resumeInfo.personalInformation.githubProfileUrl)
+                                        :
+                                        resumeInfo.personalInformation.githubProfileUrl
+                                }
+                            </h5>
+                        </a>
+                    </Fragment>
+                )}
+                {resumeInfo.personalInformation.linkedInProfileUrl && (
+                    <Fragment>
+                        <span>{` | `}</span>
+                        <a href={
+                            isValidGithubURL(resumeInfo.personalInformation.linkedInProfileUrl) ?
+                                addProtocol(resumeInfo.personalInformation.linkedInProfileUrl)
+                                :
+                                ""
+                        } className="underline font-bold">
+                            <h5 className="text-center text-sm">
+                                {
+                                    isValidLinkedinURL(resumeInfo.personalInformation.linkedInProfileUrl) ?
+                                        normalizeURL(resumeInfo.personalInformation.linkedInProfileUrl)
+                                        :
+                                        resumeInfo.personalInformation.linkedInProfileUrl
+                                }
+                            </h5>
+                        </a>
+                    </Fragment>
+                )}
+            </span>
 
             <hr className="border-[1.5px] my-2"
                 style={{
-                    borderColor: themeColor,
+                    borderColor: themeColor
                 }}
             />
         </div>
