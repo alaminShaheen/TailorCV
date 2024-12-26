@@ -21,6 +21,7 @@ import { toastDateFormat } from "@/lib/utils";
 
 type ResumeContextType = {
     resumeInfo: Resume;
+    isFetchingResume: boolean;
     isLoading: boolean;
     isError: boolean;
     isSuccess: boolean;
@@ -33,6 +34,7 @@ const RESUME_CONTEXT_DEFAULT_VALUES: ResumeContextType = {
     isLoading: false,
     isSuccess: false,
     isError: false,
+    isFetchingResume: false,
     saveResume: () => null,
     updateResumeReflection: () => null
 };
@@ -76,8 +78,9 @@ export const ResumeContextProvider = (props: ResumeContextProviderProps) => {
             resumeInfo: reflectedChanges,
             updateResumeReflection: setReflectedChanges,
             isError,
+            isFetchingResume: isLoading,
             isSuccess,
-            isLoading: isLoading || isPending,
+            isLoading: isPending,
             saveResume: mutate
         }}>
             {children}

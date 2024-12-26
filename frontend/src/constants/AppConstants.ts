@@ -6,7 +6,15 @@ export const APP_CONSTANTS = {
         id: "",
         createdAt: "",
         updatedAt: "",
-        personalInformation: { name: "", githubProfileUrl: "", linkedInProfileUrl: "", email: "" },
+        personalInformation: {
+            name: "",
+            githubProfileUrl: "",
+            linkedInProfileUrl: "",
+            email: "",
+            homeAddress: "",
+            personalWebsite: "",
+            phoneNumber: ""
+        },
         technicalSkills: {},
         summary: "",
         userId: "",

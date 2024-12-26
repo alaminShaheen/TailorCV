@@ -1,21 +1,25 @@
 import { JobType } from "@/models/enums/JobType";
+import { Duration } from "@/models/Duration";
 
 export type PersonalInformation = {
     name: string;
     email: string;
+    phoneNumber: string;
+    personalWebsite?: string;
     linkedInProfileUrl?: string;
     githubProfileUrl?: string;
+    homeAddress?: string;
 }
 
 export type Experience = {
-    designation: string;
+    designation: string; // eg: software developer
+    role: string; // eg: intern
+    duration: Duration;
+    jobType?: JobType;
     companyName: string;
     companyUrl?: string
-    from: string;
-    to: string;
     location: string;
-    jobType: JobType;
-    jobDetails: string[];
+    jobDetails: { detail: string }[];
 }
 
 export type Project = {
@@ -27,10 +31,9 @@ export type Project = {
 
 export type Education = {
     institutionName: string;
-    degreeName: string;
     location: string;
-    isPresent?: boolean;
-    graduationDate: string;
+    degreeName: string;
+    duration: Duration;
 }
 
 export type Resume = {

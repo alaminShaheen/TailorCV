@@ -14,7 +14,7 @@ const AddResume = () => {
     const router = useRouter();
 
     const onResumeCreated = useCallback((resumeMetadata: ResumeMetadata) => {
-        router.push(ROUTES.RESUME(resumeMetadata.id));
+        router.push(ROUTES.CREATE_RESUME(resumeMetadata.id));
     }, [router]);
 
     const { isPending, isError, error, mutate } = useCreateBlankResume({

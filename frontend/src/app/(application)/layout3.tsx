@@ -5,7 +5,7 @@ import { useTheme } from "next-themes";
 import { Moon, Sun } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useMediaQuery } from "usehooks-ts";
-import React, { ReactNode, useCallback, useMemo } from "react";
+import React, { ReactNode, useCallback } from "react";
 
 import { cn } from "@/lib/utils";
 import { ROUTES } from "@/constants/Routes";
@@ -41,35 +41,43 @@ const AuthLayout = (props: AuthLayoutProps) => {
         setTheme(resolvedTheme === "dark" ? "light" : "dark");
     }, [resolvedTheme]);
 
-    const resolvedLogo = useMemo(() => {
-        return resolvedTheme === "dark" ? "/logo-dark.svg" : "/logo.svg";
-    }, [resolvedTheme])
+    const resolveLogo = useCallback(() => {
+        if (pathname.includes(ROUTES.LOGIN) || pathname.includes(ROUTES.PASSWORD_RESET)) {
+            return resolvedTheme === "dark" ? "/logo-dark.svg" : "/logo.svg";
+        } else {
+            if (isLargeScreen) {
+                return "/logo-dark.svg";
+            } else {
+                return resolvedTheme === "dark" ? "/logo-dark.svg" : "/logo.svg";
+            }
+        }
+    }, [pathname, resolvedTheme, isLargeScreen]);
 
     return (
-        <div>
-            <div className="p-4 sticky top-0 flex justify-between z-50 backdrop-filter backdrop-blur-md bg-opacity-40 border-b-2 border-primary">
-                <div
-                    className={cn("flex items-center gap-2", {
-                        "text-black dark:text-white": pathname.includes(ROUTES.REGISTER) && !isLargeScreen,
-                        "text-white": pathname.includes(ROUTES.REGISTER) && isLargeScreen
-                    })}>
-                    <Image src={resolvedLogo} alt="logo" width={40} height={40} />
-                    TailorCV
-                </div>
-                <div className="flex items-center gap-4">
+        <div
+            className={cn("relative md:grid lg:max-w-none lg:px-0 bg-white dark:bg-zinc-900 lg:grid-cols-1")}>
+            <div className="sticky top-0">
+                <div className="absolute right-4 top-4 md:right-8 md:top-8 flex items-center z-40 gap-4">
                     <Button variant="ghost" size="icon" onClick={onThemeChange}
                             className={cn(buttonVariants({ variant: "ghost" }))}
                             title={resolvedTheme === "dark" ? "Toggle dark mode" : "Toggle light mode"}>
                         {resolvedTheme === "dark" ? <Sun /> : <Moon />}
                     </Button>
-                    <Button variant="destructive" onClick={onLogout}
-                            className={cn(buttonVariants({ variant: "ghost" }))}
+                    <Button variant="destructive" onClick={onLogout} className={cn(buttonVariants({ variant: "ghost" }))}
                             title="Logout">
                         Logout
                     </Button>
                 </div>
+                <div
+                    className={cn("absolute left-4 top-2.5 md:left-8 md:top-6 z-40 flex items-center text-base lg:text-lg font-medium", {
+                        "text-black dark:text-white": pathname.includes(ROUTES.REGISTER) && !isLargeScreen,
+                        "text-white": pathname.includes(ROUTES.REGISTER) && isLargeScreen
+                    })}>
+                    <Image src={resolveLogo()} alt="logo" width={40} height={40} />
+                    TailorCV
+                </div>
             </div>
-            <div className="w-3/4 mx-auto">
+            <div className="absolute top-20 w-full bottom-0">
                 <ResumeContextProvider>
                     {children}
                 </ResumeContextProvider>

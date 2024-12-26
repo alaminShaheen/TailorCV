@@ -1,5 +1,3 @@
-import { z } from "zod";
-
 export type PersonalInformation = {
     name: string;
     email: string;
