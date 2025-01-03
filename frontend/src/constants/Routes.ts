@@ -3,5 +3,9 @@ export const ROUTES = {
     LOGIN: '/login',
     REGISTER: '/register',
     PASSWORD_RESET: '/passwordReset',
-    RESUMES: '/resumes',
+    ALL_RESUMES: '/resumes',
+    RESUME: (id: string) => `/resumes/${id}`,
+    CREATE_RESUME: (id: string) => `/resumes/${id}/create`,
+    WORK_EXPERIENCE: 'work-experience'
+
 }

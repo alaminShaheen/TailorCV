@@ -6,6 +6,8 @@ import { ThemeProvider } from "@/contexts/ThemeContext";
 import { Toaster } from "@/components/ui/sonner";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Dialog } from "@/components/ui/dialog";
+import { AlertDialog } from "@/components/ui/alert-dialog";
 
 const queryClient = new QueryClient();
 
@@ -24,11 +26,15 @@ const ProviderWrapper = (props: ProviderWrapperProps) => {
                     enableSystem
                     disableTransitionOnChange
                 >
-                    {/*<Navbar />*/}
-                    {children}
-                    {/*<div className="bg-gray-100 dark:bg-zinc-900 flex-1">*/}
-                    {/*</div>*/}
-                    <Toaster />
+                    <AlertDialog>
+                        <Dialog>
+                            {/*<Navbar />*/}
+                            {children}
+                            {/*<div className="bg-gray-100 dark:bg-zinc-900 flex-1">*/}
+                            {/*</div>*/}
+                            <Toaster />
+                        </Dialog>
+                    </AlertDialog>
                 </ThemeProvider>
             </AuthContextProvider>
             <ReactQueryDevtools initialIsOpen={true} />

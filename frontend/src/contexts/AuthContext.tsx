@@ -59,6 +59,14 @@ export const AuthContextProvider = (props: AppContextProviderProps) => {
         }
     }, []);
 
+    const refreshToken = useCallback(async () => {
+        const newToken = await user?.getIdToken(true);
+        if (newToken) {
+            addAxiosAuthHeader(newToken);
+            setAccessToken(newToken);
+        }
+    }, [user]);
+
     useEffect(() => {
         const authRoutes = [ROUTES.LOGIN, ROUTES.REGISTER, ROUTES.PASSWORD_RESET];
         if (authenticated && !appLoading && authRoutes.includes(pathname)) {

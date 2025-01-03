@@ -20,7 +20,6 @@ const appRouter = router();
 
 app.use(loggingHandler);
 
-logging.log(CLIENT_ORIGIN, "sakib")
 
 app.options("*", cors({
     origin: CLIENT_ORIGIN,
