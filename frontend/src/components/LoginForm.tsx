@@ -64,7 +64,7 @@ const LoginForm = () => {
     }, [reset, router, handleErrors]);
 
     const onThirdPartyLoginSuccess = useCallback(() => {
-        router.push(ROUTES.HOME);
+        router.push(ROUTES.ALL_RESUMES);
     }, [router]);
 
     const { mutate: loginMutate, isPending: loginMutationPending } = useLoginMutation({
@@ -85,7 +85,6 @@ const LoginForm = () => {
             setLoading(true);
             const provider = new GoogleAuthProvider();
             const userCredentials = await signInWithPopup(auth, provider);
-            console.log(userCredentials);
             await onUserLogin(userCredentials.user);
             thirdPartyMutate();
         } catch (error) {

@@ -6,15 +6,16 @@ type DownloadProps = {
     title: string;
     isLoading: boolean;
     handleDownload: () => Promise<void>;
+    disabled?: boolean;
 }
 
 const Download = (props: DownloadProps) => {
-    const { isLoading, title, handleDownload } = props;
+    const { isLoading, title, handleDownload, disabled = false, } = props;
     const [loading, setLoading] = useState(false);
 
     return (
         <Button
-            disabled={isLoading || loading}
+            disabled={isLoading || loading || disabled}
             variant="secondary"
             className="bg-white border gap-1 dark:bg-gray-800 !p-2 min-w-9 hidden md:block lg:min-w-auto lg:p-4"
             onClick={handleDownload}

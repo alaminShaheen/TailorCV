@@ -6,8 +6,7 @@ import { RAGController } from "@/controllers/RAGController";
 export default (router: Router, baseApiUrl: string = "/") => {
     const ragRouter = Router();
 
-    ragRouter.post("/professional-summary", verifyAuthentication, RAGController.generateProfessionalSummary);
-    ragRouter.post("/work-experience", verifyAuthentication, RAGController.generateWorkExperience);
+    ragRouter.post("/resume-content/:id", verifyAuthentication, RAGController.generateResumeContent);
 
     router.use(baseApiUrl, ragRouter);
     return router;

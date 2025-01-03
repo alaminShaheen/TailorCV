@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
 import React, { useCallback } from "react";
-import { useFieldArray, useForm, useFormContext } from "react-hook-form";
+import { useFieldArray, useFormContext } from "react-hook-form";
 
 import { Input } from "@/components/ui/input";
 import { ResumeBuilder } from "@/models/forms/ResumeBuilder";
@@ -14,16 +14,17 @@ import { compareDesc } from "date-fns";
 import { Checkbox } from "@/components/ui/checkbox";
 import { JobType } from "@/models/enums/JobType";
 import ExperienceDetails from "@/components/ResumeEditor/ExperienceDetails";
+import { Experience } from "@/models/Resume";
 
 type WorkExperienceProps = {
     id: string;
-    onScrollFocus: (id: string) => void;
+    onScrollFocus?: (id: string) => void;
+    updateResume?: boolean;
 }
 
 const WorkExperience = (props: WorkExperienceProps) => {
-    const { id, onScrollFocus } = props;
-    const { resumeInfo, updateResumeReflection } = useResumeContext();
-
+    const { id, onScrollFocus, updateResume = false } = props;
+    const { updateResumeReflection } = useResumeContext();
     const form = useFormContext<ResumeBuilder>();
     const { fields, append, remove } = useFieldArray<ResumeBuilder>({
         control: form.control,
@@ -35,7 +36,7 @@ const WorkExperience = (props: WorkExperienceProps) => {
             (entries) => {
                 entries.forEach((entry) => {
                     if (entry.isIntersecting) {
-                        onScrollFocus(id);
+                        onScrollFocus?.(id);
                     }
                 });
             },
@@ -50,21 +51,18 @@ const WorkExperience = (props: WorkExperienceProps) => {
         }
     }, [id, onScrollFocus]);
 
-    const {
-        register,
-        formState: { errors },
-        handleSubmit,
-        setError,
-        reset
-    } = form;
-
     const deleteWorkExperience = useCallback((index: number) => {
         if (fields.length === 1) return;
         remove(index);
-    }, [remove, fields.length]);
+        if (updateResume) {
+            updateResumeReflection(prev => {
+                return { ...prev, experiences: [...prev.experiences.filter((_, deleteIndex) => deleteIndex !== index)] };
+            });
+        }
+    }, [remove, fields.length, updateResume, updateResumeReflection]);
 
     const addWorkExperience = useCallback(() => {
-        append({
+        const newExperience = {
             designation: "",
             companyName: "",
             companyUrl: "",
@@ -74,15 +72,20 @@ const WorkExperience = (props: WorkExperienceProps) => {
             jobDetails: [],
             duration: {
                 isPresent: false,
-                to: undefined as unknown as Date,
-                from: undefined as unknown as Date
+                to: new Date(),
+                from: new Date()
             }
-        });
-    }, [append]);
+        } as Experience;
+        append(newExperience);
+        if (updateResume) {
+            updateResumeReflection(prev => {
+                return { ...prev, experiences: [...prev.experiences, newExperience] };
+            });
+        }
+    }, [append, updateResume, updateResumeReflection]);
 
     return (
-        <div className="flex flex-col mx-auto gap-y-6 w-full p-4 border-2 border-primary rounded-md"
-             ref={divScrolledRef} id={id}>
+        <div className="flex flex-col mx-auto gap-y-6 w-full p-4 border-2 border-primary rounded-md" id={id} ref={divScrolledRef}>
             <div className="space-y-1.5 text-center">
                 <h2 className="text-2xl font-semibold">Work Experience</h2>
                 <p className="text-sm text-muted-foreground">Tell us about your experience.</p>
@@ -108,7 +111,22 @@ const WorkExperience = (props: WorkExperienceProps) => {
                             <FormItem>
                                 <FormLabel>Designation*</FormLabel>
                                 <FormControl>
-                                    <Input {...field} />
+                                    <Input {...field} onChange={event => {
+                                        field.onChange(event);
+                                        if (updateResume) {
+                                            updateResumeReflection(prev => {
+                                                return {
+                                                    ...prev,
+                                                    experiences: prev.experiences.map((experience, experienceIndex) => {
+                                                        if (experienceIndex === index) {
+                                                            experience.designation = event.target.value;
+                                                        }
+                                                        return experience;
+                                                    })
+                                                };
+                                            });
+                                        }
+                                    }} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -122,7 +140,22 @@ const WorkExperience = (props: WorkExperienceProps) => {
                             <FormItem>
                                 <FormLabel>Company Name*</FormLabel>
                                 <FormControl>
-                                    <Input {...field} type="text" />
+                                    <Input {...field} onChange={event => {
+                                        field.onChange(event);
+                                        if (updateResume) {
+                                            updateResumeReflection(prev => {
+                                                return {
+                                                    ...prev,
+                                                    experiences: prev.experiences.map((experience, experienceIndex) => {
+                                                        if (experienceIndex === index) {
+                                                            experience.companyName = event.target.value;
+                                                        }
+                                                        return experience;
+                                                    })
+                                                };
+                                            });
+                                        }
+                                    }} type="text" />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -135,7 +168,22 @@ const WorkExperience = (props: WorkExperienceProps) => {
                             <FormItem>
                                 <FormLabel>Company URL</FormLabel>
                                 <FormControl>
-                                    <Input {...field} type="text" />
+                                    <Input {...field} onChange={event => {
+                                        field.onChange(event);
+                                        if (updateResume) {
+                                            updateResumeReflection(prev => {
+                                                return {
+                                                    ...prev,
+                                                    experiences: prev.experiences.map((experience, experienceIndex) => {
+                                                        if (experienceIndex === index) {
+                                                            experience.companyUrl = event.target.value;
+                                                        }
+                                                        return experience;
+                                                    })
+                                                };
+                                            });
+                                        }
+                                    }} type="text" />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -148,7 +196,22 @@ const WorkExperience = (props: WorkExperienceProps) => {
                             <FormItem>
                                 <FormLabel>Location</FormLabel>
                                 <FormControl>
-                                    <Input {...field} type="text" />
+                                    <Input {...field} onChange={event => {
+                                        field.onChange(event);
+                                        if (updateResume) {
+                                            updateResumeReflection(prev => {
+                                                return {
+                                                    ...prev,
+                                                    experiences: prev.experiences.map((experience, experienceIndex) => {
+                                                        if (experienceIndex === index) {
+                                                            experience.location = event.target.value;
+                                                        }
+                                                        return experience;
+                                                    })
+                                                };
+                                            });
+                                        }
+                                    }} type="text" />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -166,7 +229,22 @@ const WorkExperience = (props: WorkExperienceProps) => {
                                     <FormItem className="flex flex-col">
                                         <FormLabel>From*</FormLabel>
                                         <FormControl>
-                                            <DatePicker {...field} />
+                                            <DatePicker {...field} onChange={event => {
+                                                field.onChange(event);
+                                                if (updateResume) {
+                                                    updateResumeReflection(prev => {
+                                                        return {
+                                                            ...prev,
+                                                            experiences: prev.experiences.map((experience, experienceIndex) => {
+                                                                if (experienceIndex === index && event) {
+                                                                    experience.duration.from = event;
+                                                                }
+                                                                return experience;
+                                                            })
+                                                        };
+                                                    });
+                                                }
+                                            }} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -194,7 +272,22 @@ const WorkExperience = (props: WorkExperienceProps) => {
                                     <FormItem className="flex flex-col">
                                         <FormLabel>To*</FormLabel>
                                         <FormControl>
-                                            <DatePicker {...field} />
+                                            <DatePicker {...field} onChange={event => {
+                                                field.onChange(event);
+                                                if (updateResume) {
+                                                    updateResumeReflection(prev => {
+                                                        return {
+                                                            ...prev,
+                                                            experiences: prev.experiences.map((experience, experienceIndex) => {
+                                                                if (experienceIndex === index && event) {
+                                                                    experience.duration.to = event;
+                                                                }
+                                                                return experience;
+                                                            })
+                                                        };
+                                                    });
+                                                }
+                                            }} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -215,6 +308,24 @@ const WorkExperience = (props: WorkExperienceProps) => {
                                             onCheckedChange={(checked) => {
                                                 field.onChange(checked);
                                                 form.setValue(`experiences.${index}.duration.to`, undefined);
+                                                if (updateResume) {
+                                                    updateResumeReflection(prev => {
+                                                        return {
+                                                            ...prev,
+                                                            experiences: prev.experiences.map((experience, experienceIndex) => {
+                                                                if (experienceIndex === index) {
+                                                                    experience.duration.isPresent = !!checked;
+                                                                    if (checked) {
+                                                                        experience.duration.to = undefined;
+                                                                    } else {
+                                                                        experience.duration.to = new Date();
+                                                                    }
+                                                                }
+                                                                return experience;
+                                                            })
+                                                        };
+                                                    });
+                                                }
                                             }}
                                         />
                                     </FormControl>
@@ -226,7 +337,7 @@ const WorkExperience = (props: WorkExperienceProps) => {
                             )}
                         />
                     </div>
-                    <ExperienceDetails index={index} />
+                    <ExperienceDetails index={index} updateResume={updateResume} />
                 </div>
             ))}
             <Button

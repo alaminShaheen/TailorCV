@@ -1,93 +1,45 @@
-import jsPDF from "jspdf";
-import { toast } from "sonner";
 import { Save, Trash2 } from "lucide-react";
-import html2canvas from "html2canvas";
-import { useDebounceValue } from "usehooks-ts";
-import React, { useCallback, useState } from "react";
+import React, { Ref, useCallback, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import ResumeTitle from "@/components/ResumeTitle";
-import ResumeTheme from "@/components/ResumeTheme";
 import PreviewModal from "@/components/PreviewModal";
 import DownloadResume from "@/components/DownloadResume";
-import { APP_CONSTANTS } from "@/constants/AppConstants";
 import ResumeHeaderOptions from "@/components/ResumeHeaderOptions";
 import { useResumeContext } from "@/contexts/ResumeContext";
 import { useRenameResumeTitle } from "@/hooks/mutations/useRenameResumeTitle";
-import { generateResumeThumbnail } from "@/lib/generateResumeThumbnail";
-import { formatFileName, toastDateFormat } from "@/lib/utils";
+import { useReactToPrint } from "react-to-print";
+import { useDeleteResume } from "@/hooks/mutations/useDeleteResume";
+import { toast } from "sonner";
+import { toastDateFormat } from "@/lib/utils";
+import { useRouter } from "next/navigation";
+import { ROUTES } from "@/constants/Routes";
 
+type ResumeHeaderProps = {
+    previewRef: Ref<HTMLDivElement>;
+    onSave: () => void;
+}
 
-const ResumeHeader = () => {
+const ResumeHeader = (props: ResumeHeaderProps) => {
+    const { previewRef, onSave } = props;
     const { isLoading, resumeInfo, saveResume } = useResumeContext();
     const [downloadingResume, setDownloadingResume] = useState(false);
-    const [selectedTheme, setSelectedTheme] = useDebounceValue(APP_CONSTANTS.RESUME_DEFAULT_THEME, 500);
+    const router = useRouter();
 
-    const onColorSelect = useCallback(async (color: string) => {
-            setSelectedTheme(color);
+    const onResumeDelete = useCallback(() => {
+        toast.success("Resume deleted successfully.", {
+            richColors: true,
+            description: toastDateFormat(new Date())
+        });
+        router.push(ROUTES.ALL_RESUMES);
+    }, [router]);
 
-            if (!resumeInfo) return;
-            try {
-                const thumbnail = await generateResumeThumbnail();
+    const {
+        mutate: deleteResume,
+        isPending: isDeletingResume,
+    } = useDeleteResume({ resumeId: resumeInfo.id, onSuccess: onResumeDelete });
 
-                if (!thumbnail) throw new Error();
-
-                saveResume({
-                    themeColor: color,
-                    thumbnail
-                });
-            } catch (error) {
-                toast.error("An unexpected error occurred.", {
-                    richColors: true,
-                    description: toastDateFormat(new Date())
-                });
-            }
-        },
-        [resumeInfo, saveResume]
-    );
-
-    const handleDownload = useCallback(async () => {
-        const resumeElement = document.getElementById("resume-preview-id");
-        if (!resumeElement) {
-            toast.error("Could not download resume", {
-                richColors: true,
-                description: toastDateFormat(new Date())
-            });
-            return;
-        }
-        setDownloadingResume(true);
-
-        const fileName = formatFileName(resumeInfo?.title || "Unititled Resume");
-        try {
-            const canvas = await html2canvas(resumeElement, { scale: 2 });
-            const imgData = canvas.toDataURL("image/png");
-            const pdf = new jsPDF();
-            const imgWidth = 210; //A4 size in mm
-            const pageHeight = 295;
-            const imgHeight = (canvas.height * imgWidth) / canvas.width;
-            let heightLeft = imgHeight;
-
-            let position = 0;
-            pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-            heightLeft -= pageHeight;
-
-            while (heightLeft >= 0) {
-                position = heightLeft - imgHeight;
-                pdf.addPage();
-                pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-                heightLeft -= pageHeight;
-            }
-            pdf.save(fileName);
-        } catch (error) {
-            console.error("Error generating PDF:", error);
-            toast.error("There was an error generating the PDF", {
-                richColors: true,
-                description: toastDateFormat(new Date())
-            });
-        } finally {
-            setDownloadingResume(false);
-        }
-    }, [resumeInfo.title]);
+    const download = useReactToPrint({ contentRef: previewRef, documentTitle: resumeInfo.title || "Untitled Resume" });
 
     const {
         mutate: updateResumeTitle,
@@ -109,6 +61,10 @@ const ResumeHeader = () => {
         [resumeInfo?.title, saveResume, updateResumeTitle]
     );
 
+    const onDeleteClicked = useCallback(() => {
+        deleteResume();
+    }, [deleteResume]);
+
     return (
         <header className="w-full flex items-center justify-between border-b pb-3">
             <div className="flex items-center gap-2">
@@ -120,15 +76,14 @@ const ResumeHeader = () => {
             </div>
             <div className="flex items-center gap-2">
                 <div className="hidden md:block">
-                    <Button variant="outline">
+                    <Button variant="outline" onClick={onSave} disabled={isPending || isDeletingResume || isLoading}>
                         <Save />
+
                         <span className="hidden lg:flex">
-                            Save
+                            {isPending || isLoading ? "Saving" : "Save"}
                         </span>
                     </Button>
                 </div>
-                {/* {ThemeColor} */}
-                <ResumeTheme onThemeSelect={onColorSelect} />
 
                 {/* Preview Modal */}
                 <PreviewModal />
@@ -137,11 +92,12 @@ const ResumeHeader = () => {
                 <DownloadResume
                     title={resumeInfo?.title || "Unititled Resume"}
                     isLoading={isLoading || downloadingResume}
-                    handleDownload={handleDownload}
+                    handleDownload={download}
+                    disabled={isPending || isDeletingResume}
                 />
 
                 <div className="hidden md:block">
-                    <Button variant="outline">
+                    <Button variant="outline" onClick={onDeleteClicked} disabled={isPending || isDeletingResume}>
                         <Trash2 />
                         <span className="hidden lg:flex">
                             Delete
@@ -150,10 +106,10 @@ const ResumeHeader = () => {
                 </div>
                 {/* More Option */}
                 <ResumeHeaderOptions
-                    handleDownload={handleDownload}
+                    onSave={onSave}
+                    handleDownload={download}
                     loading={isLoading || downloadingResume}
-                    onDelete={async () => {
-                    }}
+                    onDelete={onDeleteClicked}
                 />
             </div>
         </header>

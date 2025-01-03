@@ -1,6 +1,5 @@
 "use client";
-import React, { FC, Fragment, useCallback } from "react";
-import { APP_CONSTANTS } from "@/constants/AppConstants";
+import React, { FC, Fragment } from "react";
 import { Resume } from "@/models/Resume";
 import { Skeleton } from "@/components/ui/skeleton";
 import { addProtocol, isValidGithubURL, isValidLinkedinURL, normalizeURL } from "@/lib/Url";
@@ -10,36 +9,18 @@ interface PropsType {
     isLoading: boolean;
 }
 
-const PersonalInfo: FC<PropsType> = ({ resumeInfo, isLoading }) => {
-    const themeColor = resumeInfo?.themeColor || APP_CONSTANTS.RESUME_DEFAULT_THEME;
-
+const PersonalInfoPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
     if (isLoading) {
         return <SkeletonLoader />;
     }
 
-    const renderProfileLinks = useCallback(() => {
-        let links = resumeInfo.personalInformation.email;
-        if (resumeInfo.personalInformation.githubProfileUrl) {
-            links += ` | ${resumeInfo.personalInformation.githubProfileUrl}`;
-        }
-
-        if (resumeInfo.personalInformation.linkedInProfileUrl) {
-            links += ` | ${resumeInfo.personalInformation.linkedInProfileUrl}`;
-        }
-        return links;
-    }, [resumeInfo]);
-
     return (
         <div className="w-full min-h-14">
-            <h2 className="font-bold text-xl text-center"
-                style={{
-                    color: themeColor
-                }}
-            >
+            <h2 className="font-bold text-xl text-center">
                 {resumeInfo?.personalInformation.name || "John Doe"}{" "}
             </h2>
             <span className="flex items-center justify-center gap-2">
-                <a href={`mailto:${resumeInfo.personalInformation.email}`} className="underline font-bold">
+                <a href={`mailto:${resumeInfo.personalInformation.email}`} className="font-bold">
                     <h5 className="text-center text-sm">
                         {resumeInfo.personalInformation.email}
                     </h5>
@@ -53,7 +34,7 @@ const PersonalInfo: FC<PropsType> = ({ resumeInfo, isLoading }) => {
                                 :
                                 ""
                         }
-                           className="underline font-bold">
+                           className="font-bold">
                             <h5 className="text-center text-sm">
                                 {
                                     isValidGithubURL(resumeInfo.personalInformation.githubProfileUrl) ?
@@ -69,11 +50,11 @@ const PersonalInfo: FC<PropsType> = ({ resumeInfo, isLoading }) => {
                     <Fragment>
                         <span>{` | `}</span>
                         <a href={
-                            isValidGithubURL(resumeInfo.personalInformation.linkedInProfileUrl) ?
+                            isValidLinkedinURL(resumeInfo.personalInformation.linkedInProfileUrl) ?
                                 addProtocol(resumeInfo.personalInformation.linkedInProfileUrl)
                                 :
                                 ""
-                        } className="underline font-bold">
+                        } className="font-bold">
                             <h5 className="text-center text-sm">
                                 {
                                     isValidLinkedinURL(resumeInfo.personalInformation.linkedInProfileUrl) ?
@@ -86,12 +67,6 @@ const PersonalInfo: FC<PropsType> = ({ resumeInfo, isLoading }) => {
                     </Fragment>
                 )}
             </span>
-
-            <hr className="border-[1.5px] my-2"
-                style={{
-                    borderColor: themeColor
-                }}
-            />
         </div>
     );
 };
@@ -111,4 +86,4 @@ const SkeletonLoader = () => {
     );
 };
 
-export default PersonalInfo;
+export default PersonalInfoPreview;

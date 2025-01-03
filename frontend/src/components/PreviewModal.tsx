@@ -1,12 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Eye, FileText } from "lucide-react";
-import React from "react";
+import React, { useRef } from "react";
 import { useResumeContext } from "@/contexts/ResumeContext";
 import ResumePreview from "@/components/ResumePreview/ResumePreview";
 
 const PreviewModal = () => {
     const { resumeInfo, isLoading } = useResumeContext();
+    const previewRef = useRef<HTMLDivElement | null>(null);
 
     return (
         <Dialog>
@@ -28,8 +29,8 @@ const PreviewModal = () => {
                         {resumeInfo?.title}
                     </DialogTitle>
                 </DialogHeader>
-                <div className="w-full h-full px-2 pb-4">
-                    <ResumePreview />
+                <div className="w-full h-full p-2">
+                    <ResumePreview previewRef={previewRef} />
                 </div>
             </DialogContent>
         </Dialog>

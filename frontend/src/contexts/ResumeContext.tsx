@@ -52,6 +52,7 @@ export const ResumeContextProvider = (props: ResumeContextProviderProps) => {
 
     const onUpdateSuccess = useCallback((updatedResume: Resume) => {
         toast.success("Resume updated successfully.", {
+            richColors: true,
             description: toastDateFormat(new Date()),
             action: {
                 label: "Close",
@@ -65,6 +66,7 @@ export const ResumeContextProvider = (props: ResumeContextProviderProps) => {
         resumeId: params.id,
         enabled: Boolean(params.id)
     });
+
     const { mutate, isPending } = useUpdateResume({ resumeId: params.id, onSuccess: onUpdateSuccess });
 
     useEffect(() => {

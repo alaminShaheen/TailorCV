@@ -5,4 +5,5 @@ export type Step = {
     title: string;
     icon: ReactNode;
     isCurrent: boolean;
+    component: ReactNode;
 }

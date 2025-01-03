@@ -21,7 +21,7 @@ const ResumeFormBreadcrumbs = (props: BreadcrumbsProps) => {
             <Breadcrumb>
                 <BreadcrumbList>
                     {ResumeFormSteps.map((step, index) => (
-                        <React.Fragment key={step.key}>
+                        <React.Fragment key={step.id}>
                             <BreadcrumbItem>
                                 {index === currentStepIndex ? (
                                     <BreadcrumbPage>{step.title}</BreadcrumbPage>

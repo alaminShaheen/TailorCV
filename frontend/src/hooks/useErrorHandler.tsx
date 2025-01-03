@@ -36,7 +36,6 @@ export const useErrorHandler = () => {
     }, []);
 
     const handleErrors = useCallback(<TFieldValues extends FieldValues>(error: unknown, setFormValidationError?: UseFormSetError<TFieldValues>) => {
-        console.log(error);
         if (error instanceof AxiosError && error.response) {
             if (error.response.data.errorType === ErrorType.FORM_ERROR && setFormValidationError) {
                 handleFormValidationErrors(error.response.data, setFormValidationError);

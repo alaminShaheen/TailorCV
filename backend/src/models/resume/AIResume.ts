@@ -7,10 +7,10 @@ import { ZodTechnicalSkillsSchema } from "@/models/resume/TechnicalSkills";
 export type AIWorkExperience = Partial<Experience>;
 
 export const ZodAIResume = z.object({
-    education: ZodEducationSchema,
-    experiences: ZodExperienceSchema,
+    education: z.array(ZodEducationSchema),
+    experiences: z.array(ZodExperienceSchema),
     technicalSkills: z.array(ZodTechnicalSkillsSchema),
-    projects: ZodProjectSchema,
+    projects: z.array(ZodProjectSchema),
     professionalSummary: z.string()
 });
 

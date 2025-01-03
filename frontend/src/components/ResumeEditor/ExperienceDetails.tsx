@@ -8,29 +8,63 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { ResumeBuilder } from "@/models/forms/ResumeBuilder";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { useResumeContext } from "@/contexts/ResumeContext";
 
 type ExperienceDetailsProps = {
     index: number;
+    updateResume?: boolean;
 }
 
 const ExperienceDetails = (props: ExperienceDetailsProps) => {
-    const { index } = props;
+    const { index, updateResume = false } = props;
     const form = useFormContext<ResumeBuilder>();
+    const { updateResumeReflection } = useResumeContext();
     const { fields, append, remove } = useFieldArray<ResumeBuilder>({
         control: form.control,
         name: `experiences.${index}.jobDetails` as "experiences.0.jobDetails"
     });
 
-    const deleteExperienceDetails = useCallback((index: number) => {
+    const deleteExperienceDetails = useCallback((deleteIndex: number) => {
         if (fields.length === 1) {
             return;
         }
-        remove(index);
-    }, [remove, fields.length]);
+        remove(deleteIndex);
+        if (updateResume) {
+            updateResumeReflection(prev => {
+                return {
+                    ...prev, experiences: prev.experiences.map((experience, experienceIndex) => {
+                        if (experienceIndex === index) {
+                            return {
+                                ...experience,
+                                jobDetails: experience.jobDetails.filter((_, jobDetailIndex) => jobDetailIndex !== deleteIndex)
+                            };
+                        }
+                        return experience;
+                    })
+                };
+            });
+        }
+    }, [remove, fields.length, updateResume, updateResumeReflection]);
 
     const addEmptyJobDetail = useCallback(() => {
-        append({ detail: "" });
-    }, [append]);
+        const newJobDetail = {
+            detail: "",
+            technologiesToHighlight: []
+        } as ResumeBuilder["experiences"][number]["jobDetails"][number];
+        append(newJobDetail);
+        if (updateResume) {
+            updateResumeReflection(prev => {
+                return {
+                    ...prev, experiences: prev.experiences.map((experience, experienceIndex) => {
+                        if (experienceIndex === index) {
+                            return { ...experience, jobDetails: [...experience.jobDetails, newJobDetail] };
+                        }
+                        return experience;
+                    })
+                };
+            });
+        }
+    }, [append, updateResume, updateResumeReflection]);
 
     return (
         <div className="flex flex-col">
@@ -48,14 +82,29 @@ const ExperienceDetails = (props: ExperienceDetailsProps) => {
                                 <FormItem className="w-full">
                                     <FormLabel>Detail {experienceIndex + 1}*</FormLabel>
                                     <FormControl>
-                                        <Textarea {...field} />
+                                        <Textarea {...field} onChange={event => {
+                                            field.onChange(event);
+                                            if (updateResume) {
+                                                updateResumeReflection(prev => {
+                                                    return {
+                                                        ...prev,
+                                                        experiences: prev.experiences.map((experience, expIndex) => {
+                                                            if (expIndex === index) {
+                                                                experience.jobDetails[experienceIndex].detail = event.target.value;
+                                                            }
+                                                            return experience;
+                                                        })
+                                                    };
+                                                });
+                                            }
+                                        }} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
                         <Button title="Delete Experience Detail" variant="ghost"
-                                onClick={() => deleteExperienceDetails(index)}
+                                onClick={() => deleteExperienceDetails(experienceIndex)}
                                 type="button"
                                 disabled={fields.length === 0}>
                             <Trash2 className="text-destructive cursor-pointer" />

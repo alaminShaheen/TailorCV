@@ -7,6 +7,7 @@ import React, { useCallback } from "react";
 
 import RegistrationForm from "@/components/RegistrationForm";
 import { SparklingGrid } from "@/components/SparklingGrid";
+import { ROUTES } from "@/constants/Routes";
 
 const Register = () => {
     const { resolvedTheme, setTheme } = useTheme();
@@ -16,8 +17,8 @@ const Register = () => {
     }, [resolvedTheme]);
 
     return (
-        <>
-            <div className="relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">
+        <div className="flex w-full">
+            <div className="lg:w-1/2 relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">
                 <SparklingGrid theme={"dark"} dotColor={{ light: "darkgray", dark: "darkgray" }}
                                sparkleFrequency={0.01} />
                 <div className="absolute inset-0 bg-zinc-900 dark:bg-black" />
@@ -63,7 +64,7 @@ const Register = () => {
                     </div>
                 </div>
             </div>
-            <div className="lg:p-8 h-full">
+            <div className="lg:p-8 h-full w-full lg:w-1/2">
                 <div
                     className="mx-auto px-6 md:px-0 flex w-full flex-col justify-center h-full space-y-6 sm:w-[350px]">
                     <div className="flex flex-col space-y-2 text-center">
@@ -92,9 +93,10 @@ const Register = () => {
                         </Link>
                         .
                     </p>
+                    <span className="text-center text-sm text-muted-foreground">Already have an account? <Link className="text-primary underline" href={ROUTES.LOGIN}>Login</Link></span>
                 </div>
             </div>
-        </>
+        </div>
     );
 };
 

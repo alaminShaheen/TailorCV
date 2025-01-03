@@ -1,66 +1,32 @@
 "use client";
 
 import { useFormContext } from "react-hook-form";
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback } from "react";
 
 import { Input } from "@/components/ui/input";
-import { normalizeURL } from "@/lib/Url";
 import { APP_CONSTANTS } from "@/constants/AppConstants";
 import { useResumeContext } from "@/contexts/ResumeContext";
-import { PersonalInformation } from "@/models/Resume";
 import GeneralInformationSkeleton from "@/components/ResumeEditor/Skeletons/GeneralInformationSkeleton";
 import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { ResumeBuilder } from "@/models/forms/ResumeBuilder";
 
 type GeneralInformationProps = {
     id: string;
-    onScrollFocus: (id: string) => void;
+    onScrollFocus?: (id: string) => void;
+    updateResume?: boolean;
 }
 
 const GeneralInformation = (props: GeneralInformationProps) => {
-    const { id, onScrollFocus } = props;
+    const { id, onScrollFocus, updateResume = false, } = props;
     const { resumeInfo, updateResumeReflection, isLoading, saveResume } = useResumeContext();
-    const form = useFormContext<PersonalInformation>();
-    const { reset } = form;
-
-    const onSubmit = useCallback((data: PersonalInformation) => {
-        if (data.linkedInProfileUrl) {
-            data.linkedInProfileUrl = normalizeURL(data.linkedInProfileUrl);
-        }
-
-        if (data.githubProfileUrl) {
-            data.githubProfileUrl = normalizeURL(data.githubProfileUrl);
-        }
-
-        saveResume({
-            personalInformation: {
-                githubProfileUrl: data.githubProfileUrl,
-                linkedInProfileUrl: data.linkedInProfileUrl,
-                name: data.name,
-                email: data.email,
-                personalWebsite: data.personalWebsite,
-                phoneNumber: data.phoneNumber,
-                homeAddress: data.homeAddress
-            },
-        });
-    }, [saveResume]);
-
-    useEffect(() => {
-        if (!isLoading) {
-            reset({
-                email: resumeInfo.personalInformation.email || "",
-                linkedInProfileUrl: resumeInfo.personalInformation.linkedInProfileUrl || "",
-                name: resumeInfo.personalInformation.name || "",
-                githubProfileUrl: resumeInfo.personalInformation.githubProfileUrl || "",
-            });
-        }
-    }, [isLoading, reset, resumeInfo]);
+    const form = useFormContext<ResumeBuilder>();
 
     const divScrolledRef = useCallback((node: HTMLDivElement | null) => {
         const observer = new IntersectionObserver(
             (entries) => {
                 entries.forEach((entry) => {
                     if (entry.isIntersecting) {
-                        onScrollFocus(id);
+                        onScrollFocus?.(id);
                     }
                 });
             },
@@ -87,7 +53,7 @@ const GeneralInformation = (props: GeneralInformationProps) => {
             </div>
             <FormField
                 control={form.control}
-                name="name"
+                name="personalInformation.name"
                 rules={{ required: "Name is required" }}
                 render={({ field }) => (
                     <FormItem>
@@ -96,13 +62,15 @@ const GeneralInformation = (props: GeneralInformationProps) => {
                             <Input
                                 {...field}
                                 onChange={event => {
-                                    updateResumeReflection(prev => ({
-                                        ...prev,
-                                        personalInformation: {
-                                            ...prev.personalInformation,
-                                            name: event.target.value
-                                        }
-                                    }));
+                                    if (updateResume) {
+                                        updateResumeReflection(prev => ({
+                                            ...prev,
+                                            personalInformation: {
+                                                ...prev.personalInformation,
+                                                name: event.target.value
+                                            }
+                                        }));
+                                    }
                                     field.onChange(event);
                                 }}
                             />
@@ -115,20 +83,22 @@ const GeneralInformation = (props: GeneralInformationProps) => {
                 <div className="col-span-6">
                     <FormField
                         control={form.control}
-                        name="email"
+                        name="personalInformation.email"
                         rules={{ required: "Email is required" }}
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Email*</FormLabel>
                                 <FormControl>
                                     <Input {...field} type="email" onChange={event => {
-                                        updateResumeReflection(prev => ({
-                                            ...prev,
-                                            personalInformation: {
-                                                ...prev.personalInformation,
-                                                email: event.target.value
-                                            }
-                                        }));
+                                        if (updateResume) {
+                                            updateResumeReflection(prev => ({
+                                                ...prev,
+                                                personalInformation: {
+                                                    ...prev.personalInformation,
+                                                    email: event.target.value
+                                                }
+                                            }));
+                                        }
                                         field.onChange(event);
                                     }} />
                                 </FormControl>
@@ -140,19 +110,21 @@ const GeneralInformation = (props: GeneralInformationProps) => {
                 <div className="col-span-6">
                     <FormField
                         control={form.control}
-                        name="phoneNumber"
+                        name="personalInformation.phoneNumber"
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Phone Number</FormLabel>
                                 <FormControl>
                                     <Input {...field} type="tel" onChange={event => {
-                                        updateResumeReflection(prev => ({
-                                            ...prev,
-                                            personalInformation: {
-                                                ...prev.personalInformation,
-                                                phoneNumber: event.target.value
-                                            }
-                                        }));
+                                        if (updateResume) {
+                                            updateResumeReflection(prev => ({
+                                                ...prev,
+                                                personalInformation: {
+                                                    ...prev.personalInformation,
+                                                    phoneNumber: event.target.value
+                                                }
+                                            }));
+                                        }
                                         field.onChange(event);
                                     }} />
                                 </FormControl>
@@ -164,19 +136,21 @@ const GeneralInformation = (props: GeneralInformationProps) => {
             </div>
             <FormField
                 control={form.control}
-                name="personalWebsite"
+                name="personalInformation.personalWebsite"
                 render={({ field }) => (
                     <FormItem>
                         <FormLabel>Personal Website/Portfolio URL</FormLabel>
                         <FormControl>
                             <Input {...field} type="url" onChange={event => {
-                                updateResumeReflection(prev => ({
-                                    ...prev,
-                                    personalInformation: {
-                                        ...prev.personalInformation,
-                                        personalWebsite: event.target.value
-                                    }
-                                }));
+                                if (updateResume) {
+                                    updateResumeReflection(prev => ({
+                                        ...prev,
+                                        personalInformation: {
+                                            ...prev.personalInformation,
+                                            personalWebsite: event.target.value
+                                        }
+                                    }));
+                                }
                                 field.onChange(event);
                             }} />
                         </FormControl>
@@ -186,7 +160,7 @@ const GeneralInformation = (props: GeneralInformationProps) => {
             />
             <FormField
                 control={form.control}
-                name="githubProfileUrl"
+                name="personalInformation.githubProfileUrl"
                 rules={{
                     pattern: {
                         value: APP_CONSTANTS.GITHUB_URL_REGEX,
@@ -198,13 +172,15 @@ const GeneralInformation = (props: GeneralInformationProps) => {
                         <FormLabel>Github Profile URL</FormLabel>
                         <FormControl>
                             <Input {...field} type="url" onChange={event => {
-                                updateResumeReflection(prev => ({
-                                    ...prev,
-                                    personalInformation: {
-                                        ...prev.personalInformation,
-                                        githubProfileUrl: event.target.value
-                                    }
-                                }));
+                                if (updateResume) {
+                                    updateResumeReflection(prev => ({
+                                        ...prev,
+                                        personalInformation: {
+                                            ...prev.personalInformation,
+                                            githubProfileUrl: event.target.value
+                                        }
+                                    }));
+                                }
                                 field.onChange(event);
                             }} />
                         </FormControl>
@@ -217,19 +193,21 @@ const GeneralInformation = (props: GeneralInformationProps) => {
             />
             <FormField
                 control={form.control}
-                name="linkedInProfileUrl"
+                name="personalInformation.linkedInProfileUrl"
                 render={({ field }) => (
                     <FormItem>
                         <FormLabel>LinkedIn Profile URL</FormLabel>
                         <FormControl>
                             <Input {...field} type="url" onChange={event => {
-                                updateResumeReflection(prev => ({
-                                    ...prev,
-                                    personalInformation: {
-                                        ...prev.personalInformation,
-                                        linkedInProfileUrl: event.target.value
-                                    }
-                                }));
+                                if (updateResume) {
+                                    updateResumeReflection(prev => ({
+                                        ...prev,
+                                        personalInformation: {
+                                            ...prev.personalInformation,
+                                            linkedInProfileUrl: event.target.value
+                                        }
+                                    }));
+                                }
                                 field.onChange(event);
                             }} />
                         </FormControl>
@@ -242,19 +220,21 @@ const GeneralInformation = (props: GeneralInformationProps) => {
             />
             <FormField
                 control={form.control}
-                name="homeAddress"
+                name="personalInformation.homeAddress"
                 render={({ field }) => (
                     <FormItem>
                         <FormLabel>Home Address</FormLabel>
                         <FormControl>
                             <Input {...field} type="text" onChange={event => {
-                                updateResumeReflection(prev => ({
-                                    ...prev,
-                                    personalInformation: {
-                                        ...prev.personalInformation,
-                                        homeAddress: event.target.value
-                                    }
-                                }));
+                                if (updateResume) {
+                                    updateResumeReflection(prev => ({
+                                        ...prev,
+                                        personalInformation: {
+                                            ...prev.personalInformation,
+                                            homeAddress: event.target.value
+                                        }
+                                    }));
+                                }
                                 field.onChange(event);
                             }} />
                         </FormControl>

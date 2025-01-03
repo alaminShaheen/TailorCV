@@ -12,16 +12,18 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/comp
 import { ResumeBuilder } from "@/models/forms/ResumeBuilder";
 import { compareDesc } from "date-fns";
 import { DatePicker } from "@/components/DatetimePicker";
+import { Education as EducationModel } from "@/models/Resume";
 
 
 type EducationProps = {
     id: string;
-    onScrollFocus: (id: string) => void;
+    onScrollFocus?: (id: string) => void;
+    updateResume?: boolean;
 }
 
 const Education = (props: EducationProps) => {
-    const { id, onScrollFocus } = props;
-    const { isFetchingResume } = useResumeContext();
+    const { id, onScrollFocus, updateResume } = props;
+    const { updateResumeReflection } = useResumeContext();
     const form = useFormContext<ResumeBuilder>();
     const { fields, append, remove } = useFieldArray<ResumeBuilder>({
         control: form.control,
@@ -34,7 +36,7 @@ const Education = (props: EducationProps) => {
             (entries) => {
                 entries.forEach((entry) => {
                     if (entry.isIntersecting) {
-                        onScrollFocus(id);
+                        onScrollFocus?.(id);
                     }
                 });
             },
@@ -50,24 +52,35 @@ const Education = (props: EducationProps) => {
     }, [id, onScrollFocus]);
 
     const addEmptyEducation = useCallback(() => {
-        append({
+        const newEducationEntry = {
             institutionName: "",
             location: "",
             degreeName: "",
             duration: {
                 isPresent: false,
-                to: undefined as unknown as Date,
-                from: undefined as unknown as Date
+                to: new Date(),
+                from: new Date()
             }
-        });
-    }, [append]);
+        } as EducationModel;
+        append(newEducationEntry);
+        if (updateResume) {
+            updateResumeReflection(prev => {
+                return { ...prev, education: [...prev.education, newEducationEntry] };
+            });
+        }
+    }, [append, updateResume, updateResumeReflection]);
 
     const deleteEducation = useCallback((index: number) => {
         if (includeEducation && fields.length === 1) {
             return;
         }
         remove(index);
-    }, [remove, includeEducation, fields.length]);
+        if (updateResume) {
+            updateResumeReflection(prev => {
+                return { ...prev, education: prev.education.filter((_, deleteIndex) => deleteIndex !== index) };
+            });
+        }
+    }, [remove, includeEducation, fields.length, updateResumeReflection, updateResume]);
 
     return (
         <div className="flex flex-col mx-auto gap-y-6 w-full p-4 border-2 border-primary rounded-md"
@@ -95,7 +108,22 @@ const Education = (props: EducationProps) => {
                             <FormItem>
                                 <FormLabel>Degree Name*</FormLabel>
                                 <FormControl>
-                                    <Input {...field} />
+                                    <Input value={field.value} onChange={event => {
+                                        field.onChange(event);
+                                        if (updateResume) {
+                                            updateResumeReflection(prev => {
+                                                return {
+                                                    ...prev,
+                                                    education: prev.education.map((educationField, educationFieldIndex) => {
+                                                        if (educationFieldIndex === index) {
+                                                            educationField.degreeName = event.target.value;
+                                                        }
+                                                        return educationField;
+                                                    })
+                                                };
+                                            });
+                                        }
+                                    }} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -109,7 +137,16 @@ const Education = (props: EducationProps) => {
                             <FormItem>
                                 <FormLabel>Institution Name*</FormLabel>
                                 <FormControl>
-                                    <Input {...field} type="text" />
+                                    <Input {...field} onChange={event => {
+                                        field.onChange(event);
+                                        if (updateResume) {
+                                            updateResumeReflection(prev => {
+                                                const newEducation = [...prev.education];
+                                                newEducation[index].institutionName = event.target.value;
+                                                return { ...prev, education: newEducation };
+                                            });
+                                        }
+                                    }} type="text" />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -122,7 +159,16 @@ const Education = (props: EducationProps) => {
                             <FormItem>
                                 <FormLabel>Location</FormLabel>
                                 <FormControl>
-                                    <Input {...field} type="text" />
+                                    <Input {...field} onChange={event => {
+                                        field.onChange(event);
+                                        if (updateResume) {
+                                            updateResumeReflection(prev => {
+                                                const newEducation = [...prev.education];
+                                                newEducation[index].location = event.target.value;
+                                                return { ...prev, education: newEducation };
+                                            });
+                                        }
+                                    }} type="text" />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -140,7 +186,18 @@ const Education = (props: EducationProps) => {
                                     <FormItem className="flex flex-col">
                                         <FormLabel>From</FormLabel>
                                         <FormControl>
-                                            <DatePicker {...field} />
+                                            <DatePicker {...field} onChange={event => {
+                                                field.onChange(event);
+                                                if (updateResume) {
+                                                    updateResumeReflection(prev => {
+                                                        const newEducation = [...prev.education];
+                                                        if (event) {
+                                                            newEducation[index].duration.from = event;
+                                                        }
+                                                        return { ...prev, education: newEducation };
+                                                    });
+                                                }
+                                            }} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -168,7 +225,18 @@ const Education = (props: EducationProps) => {
                                     <FormItem className="flex flex-col">
                                         <FormLabel>To</FormLabel>
                                         <FormControl>
-                                            <DatePicker {...field} />
+                                            <DatePicker {...field} onChange={event => {
+                                                field.onChange(event);
+                                                if (updateResume) {
+                                                    updateResumeReflection(prev => {
+                                                        const newEducation = [...prev.education];
+                                                        if (event) {
+                                                            newEducation[index].duration.to = event;
+                                                        }
+                                                        return { ...prev, education: newEducation };
+                                                    });
+                                                }
+                                            }} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -189,6 +257,19 @@ const Education = (props: EducationProps) => {
                                             onCheckedChange={(checked) => {
                                                 field.onChange(checked);
                                                 form.setValue(`education.${index}.duration.to`, undefined);
+                                                if (updateResume) {
+                                                    updateResumeReflection(prev => {
+                                                        const newEducation = [...prev.education];
+                                                        if (checked) {
+                                                            newEducation[index].duration.to = undefined;
+                                                            newEducation[index].duration.isPresent = true;
+                                                        } else {
+                                                            newEducation[index].duration.isPresent = false;
+                                                            newEducation[index].duration.to = new Date();
+                                                        }
+                                                        return { ...prev, education: newEducation };
+                                                    });
+                                                }
                                             }}
                                         />
                                     </FormControl>

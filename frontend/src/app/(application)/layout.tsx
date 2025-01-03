@@ -15,6 +15,7 @@ import { auth } from "@/firebaseConfig";
 import { signOut } from "firebase/auth";
 import { useErrorHandler } from "@/hooks/useErrorHandler";
 import { ResumeContextProvider } from "@/contexts/ResumeContext";
+import Link from "next/link";
 
 type AuthLayoutProps = Readonly<{ children: ReactNode }>;
 
@@ -43,19 +44,22 @@ const AuthLayout = (props: AuthLayoutProps) => {
 
     const resolvedLogo = useMemo(() => {
         return resolvedTheme === "dark" ? "/logo-dark.svg" : "/logo.svg";
-    }, [resolvedTheme])
+    }, [resolvedTheme]);
 
     return (
         <div>
-            <div className="p-4 sticky top-0 flex justify-between z-50 backdrop-filter backdrop-blur-md bg-opacity-40 border-b-2 border-primary">
-                <div
-                    className={cn("flex items-center gap-2", {
-                        "text-black dark:text-white": pathname.includes(ROUTES.REGISTER) && !isLargeScreen,
-                        "text-white": pathname.includes(ROUTES.REGISTER) && isLargeScreen
-                    })}>
-                    <Image src={resolvedLogo} alt="logo" width={40} height={40} />
-                    TailorCV
-                </div>
+            <div
+                className="p-4 sticky top-0 flex justify-between z-50 backdrop-filter backdrop-blur-md bg-opacity-40 border-b-2 border-primary">
+                <Link href={ROUTES.ALL_RESUMES}>
+                    <div
+                        className={cn("flex items-center gap-2", {
+                            "text-black dark:text-white": pathname.includes(ROUTES.REGISTER) && !isLargeScreen,
+                            "text-white": pathname.includes(ROUTES.REGISTER) && isLargeScreen
+                        })}>
+                        <Image src={resolvedLogo} alt="logo" width={40} height={40} />
+                        TailorCV
+                    </div>
+                </Link>
                 <div className="flex items-center gap-4">
                     <Button variant="ghost" size="icon" onClick={onThemeChange}
                             className={cn(buttonVariants({ variant: "ghost" }))}
@@ -69,7 +73,7 @@ const AuthLayout = (props: AuthLayoutProps) => {
                     </Button>
                 </div>
             </div>
-            <div className="w-3/4 mx-auto">
+            <div className="w-full md:w-[90%] lg:w-[85%] mx-auto">
                 <ResumeContextProvider>
                     {children}
                 </ResumeContextProvider>

@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { ResumeFormSteps } from "@/constants/ResumeFormSteps";
 import { Save } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { ROUTES } from "@/constants/Routes";
 
 type FooterProps = {
     currentStepIndex: number;
@@ -13,13 +15,17 @@ type FooterProps = {
 
 const Footer = (props: FooterProps) => {
     const { currentStepIndex, setCurrentStepIndex, isSaving } = props;
-
+    const router = useRouter();
     const previousStep = currentStepIndex !== 0 ? currentStepIndex - 1 : null;
 
     const nextStep = currentStepIndex !== ResumeFormSteps.length - 1 ? currentStepIndex + 1 : null;
 
+    const onClose = useCallback(() => {
+        router.push(ROUTES.ALL_RESUMES);
+    }, [router]);
+
     return (
-        <footer className="w-full mt-auto border-t px-3 py-5 items-end">
+        <footer className="w-full mt-auto border-t px-3 py-5 justify-end">
             <div className="mx-auto flex max-w-7xl flex-wrap justify-between gap-3">
                 <div className="flex items-center gap-3">
                     <Button
@@ -29,7 +35,7 @@ const Footer = (props: FooterProps) => {
                         }
                         disabled={previousStep === null}
                         type="submit"
-                        form={ResumeFormSteps[currentStepIndex].key}
+                        form={ResumeFormSteps[currentStepIndex].id}
                     >
                         Previous step
                     </Button>
@@ -37,13 +43,13 @@ const Footer = (props: FooterProps) => {
                         onClick={nextStep ? () => setCurrentStepIndex(nextStep) : undefined}
                         disabled={nextStep === null}
                         type="submit"
-                        form={ResumeFormSteps[currentStepIndex].key}
+                        form={ResumeFormSteps[currentStepIndex].id}
                     >
                         Next step
                     </Button>
                 </div>
                 <div className="flex items-center gap-3">
-                    <Button variant="secondary" asChild>
+                    <Button variant="secondary" asChild type="button" onClick={onClose}>
                         <Link href="/resumes">Close</Link>
                     </Button>
                     <p

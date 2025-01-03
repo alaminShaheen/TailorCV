@@ -1,6 +1,6 @@
 import { Resume } from "@/models/Resume";
 
-export type ResumeBuilder =
+export type GenerateResumeRequestDto =
     Pick<Resume, "personalInformation" | "education" | "experiences" | "projects" | "technicalSkills">
     & {
     haveWorkExperience: boolean;
@@ -10,4 +10,4 @@ export type ResumeBuilder =
     includeTechnicalSkills: boolean;
     addJobDescription: boolean;
     jobDescription?: string;
-}
+};

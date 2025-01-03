@@ -1,37 +1,42 @@
 "use client";
-import React from "react";
+import React, { Ref } from "react";
 import { cn } from "@/lib/utils";
-import SummaryPreview from "@/components/ResumePreview/SummaryPreview";
 import SkillPreview from "@/components/SkillsPreview";
 import { useResumeContext } from "@/contexts/ResumeContext";
-import PersonalInfo from "@/components/ResumePreview/PersonalInfoPreview";
+import PersonalInfoPreview from "@/components/ResumePreview/PersonalInfoPreview";
 import ExperiencePreview from "@/components/ResumePreview/ExperiencePreview";
 import EducationPreview from "@/components/ResumePreview/EducationPreview";
+import PersonalProjectsPreview from "@/components/ResumePreview/PersonalProjectsPreview";
 
-const ResumePreview = () => {
+type ResumePreviewProps = {
+    previewRef: Ref<HTMLDivElement>;
+}
+
+const ResumePreview = (props: ResumePreviewProps) => {
+    const { previewRef } = props;
     const { resumeInfo, isLoading } = useResumeContext();
 
     return (
-        <div id="resume-preview-id"
-            className={cn(`shadow-lg bg-white w-full flex-[1.02] h-full p-10 !font-open-sans dark:border dark:bg-card dark:border-b-gray-800 dark:border-x-gray-800`)}
-            style={{
-                borderTop: `13px solid ${resumeInfo?.themeColor}`,
-            }}
+        <div id="resume-preview-id" ref={previewRef}
+             className={cn(`shadow-lg bg-white w-full px-4 py-2 !font-open-sans dark:border dark:bg-card dark:border-b-gray-800 dark:border-x-gray-800`)}
         >
             {/* {Personnal Info} */}
-            <PersonalInfo isLoading={isLoading} resumeInfo={resumeInfo} />
-
-            {/* {Summary} */}
-            <SummaryPreview isLoading={isLoading} resumeInfo={resumeInfo} />
+            <PersonalInfoPreview isLoading={isLoading} resumeInfo={resumeInfo} />
 
             {/* {Professional Exp} */}
             <ExperiencePreview isLoading={isLoading} resumeInfo={resumeInfo} />
 
+            {resumeInfo.projects.length > 0 &&
+                <PersonalProjectsPreview resumeInfo={resumeInfo} isLoading={isLoading} />
+            }
+
+            {/* {Skill} */}
+            {resumeInfo.technicalSkills.length > 0 &&
+                <SkillPreview isLoading={isLoading} resumeInfo={resumeInfo} />
+            }
+
             {/* {Educational Info} */}
             <EducationPreview isLoading={isLoading} resumeInfo={resumeInfo} />
-
-            {/* {Skills} */}
-            <SkillPreview isLoading={isLoading} resumeInfo={resumeInfo} />
         </div>
     );
 };

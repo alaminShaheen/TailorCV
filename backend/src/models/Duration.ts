@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { Timestamp } from "firebase-admin/firestore";
 
 export type Duration = {
     from: Date;
@@ -8,6 +9,16 @@ export type Duration = {
 } | {
     isPresent: false;
     to: Date
+})
+
+export type FirebaseDuration = {
+    from: Timestamp;
+} & ({
+    isPresent: true;
+    to?: never;
+} | {
+    isPresent: false;
+    to: Timestamp
 })
 
 export const ZodDurationSchema = z.object({

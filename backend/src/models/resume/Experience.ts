@@ -9,8 +9,8 @@ export type Experience = {
     jobType?: JobType;
     companyName: string;
     companyUrl?: string
-    location: string;
-    jobDetails: string[];
+    location?: string;
+    jobDetails: { detail: string, technologiesToHighlight: string[] }[];
 }
 
 export const ZodExperienceSchema = z.object({
@@ -20,6 +20,6 @@ export const ZodExperienceSchema = z.object({
     jobType: z.nativeEnum(JobType).optional(),
     companyName: z.string(),
     companyUrl: z.string().optional(),
-    location: z.string(),
-    jobDetails: z.array(z.string()),
+    location: z.string().optional(),
+    jobDetails: z.array(z.object({ detail: z.string(), technologiesToHighlight: z.array(z.string()) }))
 });

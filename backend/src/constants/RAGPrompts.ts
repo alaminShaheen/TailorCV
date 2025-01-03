@@ -14,7 +14,7 @@ const GET_WORK_EXPERIENCE = function(experiences: Experience[]) {
             Position: ${experience.designation || "N/A"} at ${experience.companyName || "N/A"} from ${experience.duration.from || "N/A"} to ${experience.duration.to || "Present"}
     
             Description:
-            ${experience.jobDetails.map((detail, index) => `${index}. ${detail}`).join("\n\n")}
+            ${experience.jobDetails.map((details, index) => `${index}. ${details.detail}`).join("\n\n")}
         `;
     })}
     `;
@@ -36,9 +36,9 @@ const GET_PROJECTS = function(projects: Project[]) {
         ${projects.map(project => {
         return `
             Title: ${project.title}
-            Technologies used: ${project.technologies.map(tech => tech).join(", ")}
+            Technologies used: ${project.technologies.skills.map(tech => tech.skill).join(", ")}
             Description:
-            ${project.projectDetails.map((detail, index) => `${index}. ${detail}`).join("\n\n")}
+            ${project.projectDetails.map((details, index) => `${index}. ${details.detail}`).join("\n\n")}
         `;
     })}
     `;

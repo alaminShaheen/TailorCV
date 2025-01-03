@@ -5,13 +5,14 @@ import { Check } from "lucide-react";
 import React from "react";
 import { SparklingGrid } from "@/components/SparklingGrid";
 import LoginForm from "@/components/LoginForm";
+import { ROUTES } from "@/constants/Routes";
 
 const Login = () => {
 
 
     return (
-        <>
-            <div className="lg:p-8 h-full">
+        <div className="flex w-full">
+            <div className="w-full lg:w-1/2 lg:p-8 h-full">
                 <div
                     className="mx-auto px-6 md:px-0 flex w-full flex-col justify-center h-full space-y-6 sm:w-[350px]">
                     <div className="flex flex-col space-y-2 text-center">
@@ -26,24 +27,26 @@ const Login = () => {
                     <p className="px-8 text-center text-sm text-muted-foreground">
                         By clicking continue, you agree to our{" "}
                         <Link
-                            href="/terms"
+                            href="#"
                             className="underline underline-offset-4 hover:text-primary"
                         >
                             Terms of Service
                         </Link>{" "}
                         and{" "}
                         <Link
-                            href="/privacy"
+                            href="#"
                             className="underline underline-offset-4 hover:text-primary"
                         >
                             Privacy Policy
                         </Link>
                         .
                     </p>
+                    <span className="text-center text-sm text-muted-foreground">Don't have an account? <Link
+                        className="text-primary underline" href={ROUTES.LOGIN}>Register here</Link></span>
                 </div>
             </div>
-            <div className="relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">
-                <SparklingGrid theme={"dark"} dotColor={{ light: "darkgray", dark: "darkgray" }}
+            <div className="relative lg:w-1/2 hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">
+            <SparklingGrid theme={"dark"} dotColor={{ light: "darkgray", dark: "darkgray" }}
                                sparkleFrequency={0.01} />
                 <div className="absolute inset-0 bg-zinc-900 dark:bg-black" />
 
@@ -88,7 +91,7 @@ const Login = () => {
                     </div>
                 </div>
             </div>
-        </>
+        </div>
     );
 };
 

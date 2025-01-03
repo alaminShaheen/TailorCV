@@ -1,36 +1,32 @@
 import OpenAI from "openai";
-
-import { JobType } from "@/models/enums/JobType";
-import { AppError } from "@/errors/AppError";
-import { RAGPrompts } from "@/constants/RAGPrompts";
-import { AIWorkExperience } from "@/models/resume/AIWorkExperience";
-import { CreateResumeRequestDto } from "@/models/dtos/CreateResumeRequestDto";
-import { WorkExperienceRequestDto } from "@/models/dtos/WorkExperienceRequestDto";
 import { zodResponseFormat } from "openai/helpers/zod";
-import { ZodAIResume, AIResumeResponse } from "@/models/resume/AIResume";
+import { AppError } from "@/errors/AppError";
+import { ZodAIResume } from "@/models/resume/AIResume";
+import { ResumeService } from "@/services/ResumeService";
+import { GenerateResumeRequestDto } from "@/models/dtos/GenerateResumeRequestDto";
 
-async function generateResumeContent(resumeRequest: CreateResumeRequestDto) {
+async function generateResumeContent(resumeRequest: GenerateResumeRequestDto, resumeId: string) {
     try {
         const openai = new OpenAI();
-        const completion = await openai.chat.completions.create({
+        const completion = await openai.beta.chat.completions.parse({
             model: "gpt-4o-mini",
             response_format: zodResponseFormat(ZodAIResume, "resume"),
             messages: [
                 {
                     role: "system", content: `
-                    You are a job resume generator AI. Your task is to generate a single work experience entry based on the user input.
+                    You are a job resume generator AI. Your task is to generate contents of a resume based on the user input.
                     You can omit fields if they can't be inferred from the provided data, but don't add any
                     new ones.
                     
                     Professional summary (Use resume headline as section title, for e.g. "Senior
                     Software Engineer at Google with over 5 years of experience leading teams")
+                    
                     Skills - programming languages, frameworks, etc. "Skills"
                     Experience "Work Experience"
                     Education (Note: if you are still in school or have less than 3 years of
                     experience, you may put Education first) "Education"
                     Projects "Projects"
-                    Other optional sections - e.g. Certifications, Awards, etc "Awards and
-                    Accolades" / "Certifications" / "Awards, Accolades and Certifications"
+                    
                     How to write work experience for a Software Engineer
                     List your work experience in a familiar format and reverse chronological order.
                     Every job listed should have:
@@ -79,107 +75,100 @@ async function generateResumeContent(resumeRequest: CreateResumeRequestDto) {
                     Analyze the job description and determine how important each skill and
                     experience is, then optimize the frequency of the keyword according to its
                     importance.
+                    Also, if any technology such as frontend/backend frameworks, libraries, database, programming languages or tools are mentioned in the details of experience or projects, add them to the field "technologiesToHighlight".
                 `
                 },
                 {
                     role: "user",
                     content: `
-                    Please generate a professional resume summary from this data:
+                    Please generate a professional resume from this data:
             
                     Job Description:
                     ${resumeRequest.jobDescription || "N/A"}
                     
                     Work experience:
-                    ${resumeRequest.resumeInformation.experiences.map(experience => {
-                    return `
-                        Position: ${experience.designation || "N/A"} at ${experience.companyName || "N/A"} from ${experience.duration.from || "N/A"} to ${experience.duration.to || "Present"}
+                    ${resumeRequest.experiences.map(experience => {
+                        return `
+                        Position: ${experience.designation || "N/A"} 
+                        Company Name: ${experience.companyName || "N/A"} 
+                        Duration: from ${experience.duration.from || "N/A"} to ${experience.duration.to || "Present"}
+                        Location: ${experience.location || "N/A"}
                         Description:
                         ${experience.jobDetails.map((detail, index) => `${index}. ${detail}`).join("\n\n")}
-                    `})}
+                    `;
+                    })}
                        
                     Education:
-                    ${resumeRequest.resumeInformation.education.map(education => {
-                    return `
-                        Degree: ${education.duration.isPresent ? `Studying ${education.degreeName || "N/A"} at ${education.institutionName || "N/A"}` : `Graduated with a ${education.degreeName || "N/A"} at ${education.institutionName || "N/A"} on ${education.duration.to}`} 
-                    `})}
+                    ${resumeRequest.education.map(education => {
+                        return `
+                        Degree: ${education.degreeName || "N/A"} ${education.duration.isPresent ? `Studying  at ${education.institutionName || "N/A"}` : `Graduated with a ${education.degreeName || "N/A"} at ${education.institutionName || "N/A"} on ${education.duration.to}`}
+                        Institution: ${education.institutionName || "N/A"}
+                        Location: ${education.location || "N/A"}
+                        Duration: from ${education.institutionName || "N/A"} to ${education.duration.to || "Present"} 
+                    `;
+                    })}
                     
                     Projects:
-                    ${resumeRequest.resumeInformation.projects.map(project => {
-                    return `
+                    ${resumeRequest.projects.map(project => {
+                        return `
                         Title: ${project.title}
-                        Technologies used: ${project.technologies.map(tech => tech).join(", ")}
+                        Technologies used: ${project.technologies.skills.map(tech => tech.skill).join(", ")}
                         Description:
-                        ${project.projectDetails.map((detail, index) => `${index}. ${detail}`).join("\n\n")}
-                    `})}
+                        ${project.projectDetails.map((details, index) => `${index}. ${details.detail}`).join("\n\n")}
+                    `;
+                    })}
                 `
                 }
             ]
         });
-        const summary = completion.choices[0].message.content as unknown as AIResumeResponse;
-        console.log(summary.education);
+        const summary = completion.choices[0].message.parsed;
 
         if (!summary) {
             throw new AppError(500, "Could not generate an AI response");
         }
-        return summary;
-    } catch (error) {
-        throw error;
-    }
-}
 
-
-async function generateProfessionalSummary(resumeContent: CreateResumeRequestDto) {
-    try {
-        const openai = new OpenAI();
-        const completion = await openai.chat.completions.create({
-            model: "gpt-4o-mini",
-            messages: RAGPrompts.GET_PROFESSIONAL_SUMMARY_PROMPT(resumeContent)
+        return ResumeService.updateResume(resumeId, {
+            experiences: summary.experiences.map((experience, index) => {
+                if (experience.duration.isPresent) {
+                    return {
+                        ...experience,
+                        companyUrl: resumeRequest.experiences[index].companyUrl,
+                        duration: { isPresent: true, from: new Date(experience.duration.from) }
+                    };
+                } else {
+                    return {
+                        ...experience,
+                        companyUrl: resumeRequest.experiences[index].companyUrl,
+                        duration: {
+                            isPresent: false,
+                            from: new Date(experience.duration.from),
+                            to: new Date(experience.duration.to)
+                        }
+                    };
+                }
+            }),
+            education: summary.education.map(education => {
+                if (education.duration.isPresent) {
+                    return { ...education, duration: { isPresent: true, from: new Date(education.duration.from) } };
+                } else {
+                    return {
+                        ...education,
+                        duration: {
+                            isPresent: false,
+                            from: new Date(education.duration.from),
+                            to: new Date(education.duration.to)
+                        }
+                    };
+                }
+            }),
+            projects: summary.projects.map((project, index) => ({
+                ...project,
+                githubUrl: resumeRequest.projects[index].githubUrl
+            })),
+            technicalSkills: resumeRequest.technicalSkills,
+            personalInformation: resumeRequest.personalInformation
         });
-        const summary = completion.choices[0].message.content;
 
-        if (!summary) {
-            throw new AppError(500, "Could not generate an AI response");
-        }
-        return summary;
-    } catch (error) {
-        throw error;
-    }
-}
-
-async function generateWorkExperience(workExperience: WorkExperienceRequestDto): Promise<AIWorkExperience> {
-    try {
-        const openai = new OpenAI();
-        const completion = await openai.chat.completions.create({
-            model: "gpt-4o-mini",
-            messages: RAGPrompts.GET_WORK_EXPERIENCE_PROMPT(workExperience.experience)
-        });
-
-        const aiResponse = completion.choices[0].message.content;
-
-        if (!aiResponse) {
-            throw new AppError(500, "Failed to generate an AI response");
-        }
-        const startDateString = aiResponse.match(/Start date: (\d{4}-\d{2}-\d{2})/)?.[1];
-        const endDateString = aiResponse.match(/End date: (\d{4}-\d{2}-\d{2})/)?.[1];
-        const startDate = startDateString ? new Date(startDateString) : new Date();
-        const endDate = endDateString ? new Date(endDateString) : new Date();
-        const isCurrentlyWorking = Boolean(aiResponse.match(/IsCurrentlyWorking: (true|false)/)?.[1]);
-
-        return {
-            designation: aiResponse.match(/Job title: (.*)/)?.[1] || undefined,
-            companyName: aiResponse.match(/Company: (.*)/)?.[1] || undefined,
-            jobDetails: (aiResponse.match(/Description:([\s\S]*)/)?.[1] || undefined)?.trim()
-                .split("\n")
-                .map(line => line.trim())
-                .filter(line => line.startsWith("-"))
-                .map(line => line.substring(1).trim()),
-            duration: {
-                from: startDate,
-                ...(isCurrentlyWorking ? { isPresent: true } : { isPresent: false, to: endDate })
-            },
-            jobType: (aiResponse.match(/Job type: (.*)/)?.[1] || undefined) as JobType | undefined,
-            location: aiResponse.match(/Location: (.*)/)?.[1] || undefined
-        };
     } catch (error) {
         throw error;
     }
@@ -187,7 +176,5 @@ async function generateWorkExperience(workExperience: WorkExperienceRequestDto):
 
 
 export const RAGService = {
-    generateProfessionalSummary,
-    generateWorkExperience,
     generateResumeContent
 };

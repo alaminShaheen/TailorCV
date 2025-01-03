@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { Resume } from "@/models/Resume";
-import { APP_CONSTANTS } from "@/constants/AppConstants";
 import SkeletonLoader from "@/components/ResumePreview/SkeletonLoader";
+import Duration from "@/components/Duration";
 
 interface PropsType {
     resumeInfo?: Resume;
@@ -9,37 +9,32 @@ interface PropsType {
 }
 
 const EducationPreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
-    const themeColor = resumeInfo?.themeColor || APP_CONSTANTS.RESUME_DEFAULT_THEME;
 
     if (isLoading) {
         return <SkeletonLoader />;
     }
     return (
-        <div className="w-full my-5">
-            <h5 className="text-center font-bold mb-2" style={{ color: themeColor }}>Education</h5>
-            <hr className="border-[1.5px] my-2"
-                style={{
-                    borderColor: themeColor,
-                }}
-            />
+        <div className="w-full my-1">
+            <h5 className="text-center font-bold mb-1">Education</h5>
+            <hr className="border-[1.5px] my-1 border-black" />
 
-            <div className="flex flex-col gap-2 min-h-9">
+            <div className="flex flex-col gap-1 min-h-9">
                 {resumeInfo?.education?.map((educationEntry, index) => (
                     <div key={index}>
-                        <h5 className="text-sm font-bold" style={{ color: themeColor }}>
-                            {educationEntry?.institutionName}
-                        </h5>
-                        <div className="flex items-start justify-between">
-                            <h5 className="text-[13px]">
+                        <span className="text-[13px] inline-flex justify-between w-full">
+                            <h5 className="font-bold text-[15px]">
+                                {educationEntry?.institutionName}
+                            </h5>
+                            <Duration {...educationEntry.duration} />
+                        </span>
+                        <div className="flex text-[13px] items-start justify-between">
+                            <h5 className="italic">
                                 {educationEntry?.degreeName}
                             </h5>
-                            <span className="text-[13px]">
-                                {educationEntry?.graduationDate}
-                                {educationEntry?.graduationDate && " - "}
-                                {educationEntry?.graduationDate}
-                            </span>
+                            {educationEntry.location &&
+                                <span className="italic">{educationEntry.location}</span>
+                            }
                         </div>
-                        <p className="text-[13px] my-2">Description</p>
                     </div>
                 ))}
             </div>

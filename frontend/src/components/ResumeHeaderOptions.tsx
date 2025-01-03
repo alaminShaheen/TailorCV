@@ -12,11 +12,12 @@ import { DownloadCloud, Ellipsis, Eye, Save, Trash2 } from "lucide-react";
 type ResumeHeaderOptionsProps = {
     handleDownload: () => Promise<void>;
     loading: boolean;
-    onDelete: () => Promise<void>;
+    onDelete: () => void;
+    onSave: () => void;
 }
 
 const ResumeHeaderOptions = (props: ResumeHeaderOptionsProps) => {
-    const { handleDownload, loading, onDelete } = props;
+    const { handleDownload, loading, onDelete, onSave } = props;
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild className="md:hidden">
@@ -40,7 +41,7 @@ const ResumeHeaderOptions = (props: ResumeHeaderOptionsProps) => {
                             Delete
                         </span>
                     </DropdownMenuItem>
-                    <DropdownMenuItem className="flex items-center gap-2" onClick={onDelete}>
+                    <DropdownMenuItem className="flex items-center gap-2" onClick={onSave}>
                         <Save size="17px" />
                         <span className="lg:flex">
                             Save

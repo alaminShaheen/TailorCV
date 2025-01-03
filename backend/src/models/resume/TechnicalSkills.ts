@@ -1,9 +1,9 @@
-import { Skills, ZodSkillsSchema } from "@/models/resume/Skills";
+import { Skill, ZodSkillsSchema } from "@/models/resume/Skill";
 import { z } from "zod";
 
 export type TechnicalSkills = {
     skillName: string;
-    skills: Skills[];
+    skills: Skill[];
 }
 
 export const ZodTechnicalSkillsSchema = z.object({

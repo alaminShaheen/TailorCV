@@ -19,14 +19,14 @@ export type Experience = {
     companyName: string;
     companyUrl?: string
     location: string;
-    jobDetails: { detail: string }[];
+    jobDetails: { detail: string, technologiesToHighlight: string[] }[];
 }
 
 export type Project = {
-    name: string;
+    title: string;
     githubUrl?: string;
-    technologies: string[];
-    projectDetails: string[];
+    technologies: { skillName?: string, skills: { skill: string }[] };
+    projectDetails: { detail: string, technologiesToHighlight: string[] }[];
 }
 
 export type Education = {
@@ -38,16 +38,14 @@ export type Education = {
 
 export type Resume = {
     id: string;
-    summary?: string;
     personalInformation: PersonalInformation;
     experiences: Experience[];
     projects: Project[];
-    technicalSkills: Record<string, string[]>;
+    technicalSkills: { category: string, skillName?: string, skills: { skill: string }[] }[];
     education: Education[];
     createdAt: string;
     updatedAt: string;
     userId: string;
     title: string;
-    themeColor: string;
     thumbnail: string;
 }

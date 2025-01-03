@@ -7,6 +7,7 @@ import { getDatabaseInstance } from "../database";
 import { DATABASE_CONSTANTS } from "@/constants/databaseConstants";
 import { RenameResumeTitleRequestDto } from "@/models/dtos/RenameResumeTitleRequestDto";
 import logging from "@/utils/logging";
+import { Duration } from "@/models/Duration";
 
 const firestoreResumeConverter = {
     toFirestore: function(resume: Resume) {
@@ -14,7 +15,31 @@ const firestoreResumeConverter = {
     },
     fromFirestore: function(snapshot: QueryDocumentSnapshot) {
         const data = snapshot.data() as FirebaseDbResume;
-        return new Resume({ ...data, createdAt: data.createdAt.toDate(), updatedAt: data.updatedAt.toDate() });
+        return new Resume({
+            ...data,
+            createdAt: data.createdAt.toDate(),
+            updatedAt: data.updatedAt.toDate(),
+            experiences: data.experiences.map(exp => {
+                if (exp.duration.isPresent) {
+                    return { ...exp, duration: { isPresent: true, from: exp.duration.from.toDate() } };
+                } else {
+                    return {
+                        ...exp,
+                        duration: { isPresent: false, from: exp.duration.from.toDate(), to: exp.duration.to.toDate() }
+                    };
+                }
+            }),
+            education: data.education.map(edu => {
+                if (edu.duration.isPresent) {
+                    return { ...edu, duration: { isPresent: true, from: edu.duration.from.toDate() } };
+                } else {
+                    return {
+                        ...edu,
+                        duration: { isPresent: false, from: edu.duration.from.toDate(), to: edu.duration.to.toDate() }
+                    };
+                }
+            })
+        });
     }
 };
 
@@ -131,6 +156,36 @@ async function updateResumeTitle(resumeData: RenameResumeTitleRequestDto, userId
     }
 }
 
+function normalizeDates(resumeData: Partial<Resume>) {
+    if (resumeData.createdAt) {
+        resumeData.createdAt = new Date(resumeData.createdAt);
+    }
+    if (resumeData.updatedAt) {
+        resumeData.updatedAt = new Date(resumeData.updatedAt);
+    }
+    resumeData.education = resumeData.education?.map(education => {
+        return {
+            ...education,
+            duration: {
+                ...education.duration,
+                from: new Date(education.duration.from),
+                ...(education.duration.to ? {to: new Date(education.duration.to)} : {}),
+            } as Duration
+        };
+    });
+
+    resumeData.experiences = resumeData.experiences?.map(experience => {
+        return {
+            ...experience,
+            duration: {
+                ...experience.duration,
+                from: new Date(experience.duration.from),
+                ...(experience.duration.to ? {to: new Date(experience.duration.to)} : {}),
+            } as Duration
+        }
+    });
+}
+
 async function updateResume(resumeId: string, resumeData: Partial<Resume>): Promise<Resume | null> {
     try {
         const resumesSnapshot = await getResumeSnapshot(resumeId);
@@ -139,7 +194,7 @@ async function updateResume(resumeId: string, resumeData: Partial<Resume>): Prom
             return null;
         }
 
-        logging.log(resumeData);
+        normalizeDates(resumeData);
 
         await resumesSnapshot.ref.update({ ...resumeData, updatedAt: new Date() });
         const updateResume = await resumesSnapshot.ref.get();
@@ -157,5 +212,5 @@ export const ResumeRepository = {
     getResume,
     updateResumeTitle,
     deleteResume,
-    updateResume,
+    updateResume
 };
