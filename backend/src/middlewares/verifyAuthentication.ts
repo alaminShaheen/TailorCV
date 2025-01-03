@@ -11,7 +11,7 @@ export async function verifyAuthentication(req: Request, res: Response, next: Ne
         const token = authHeader.split(" ")[1];
 
         try {
-            // req.userInfo = await getAuth().verifyIdToken(token);
+            req.userInfo = await getAuth().verifyIdToken(token);
         } catch (error) {
             next(error);
         }

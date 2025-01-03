@@ -6,10 +6,13 @@ import { FieldValues, Path, UseFormSetError } from "react-hook-form";
 import { ErrorType } from "@/models/enums/ErrorType";
 import { FirebaseError } from "@firebase/app";
 import { toastDateFormat } from "@/lib/utils";
+import { useAuthContext } from "@/contexts/AuthContext";
 
 type FormError = Error & { fieldErrors: Record<string, string[]> };
 
 export const useErrorHandler = () => {
+    const { onUserLogin } = useAuthContext();
+
     const handleFormValidationErrors = useCallback(<TFieldValues extends FieldValues>(
         error: FormError,
         setFormValidationError: UseFormSetError<TFieldValues>
