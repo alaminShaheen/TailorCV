@@ -10,7 +10,6 @@ import React, { ReactNode, useCallback, useMemo } from "react";
 import { cn } from "@/lib/utils";
 import { ROUTES } from "@/constants/Routes";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { useAuthContext } from "@/contexts/AuthContext";
 import { auth } from "@/firebaseConfig";
 import { signOut } from "firebase/auth";
 import { useErrorHandler } from "@/hooks/useErrorHandler";
@@ -27,7 +26,6 @@ const AuthLayout = (props: AuthLayoutProps) => {
     const isLargeScreen = useMediaQuery("(min-width: 1024px)");
     const pathname = usePathname();
     const router = useRouter();
-    const { user } = useAuthContext();
 
     const onLogout = useCallback(async () => {
         try {
