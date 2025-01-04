@@ -10,12 +10,13 @@ import { useResumeContext } from "@/contexts/ResumeContext";
 import { Form } from "@/components/ui/form";
 import CreateResumeForm from "@/components/CreateResumeForm";
 import { JobType } from "@/models/enums/JobType";
+import { Protected } from "@/components/Protected";
 
 const Create = () => {
     const { isFetchingResume, resumeInfo } = useResumeContext();
     const methods = useForm<ResumeBuilder>({
         defaultValues: {
-            personalInformation: { ...resumeInfo.personalInformation, name: "hello" },
+            personalInformation: { ...resumeInfo.personalInformation },
             projects: [{
                 title: "",
                 githubUrl: "",
@@ -297,4 +298,4 @@ const Create = () => {
     );
 };
 
-export default Create;
+export default Protected(Create);

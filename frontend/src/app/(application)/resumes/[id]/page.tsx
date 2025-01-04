@@ -10,6 +10,7 @@ import { Form } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { ResumeFormSteps } from "@/constants/ResumeFormSteps";
 import { Resume } from "@/models/Resume";
+import { Protected } from "@/components/Protected";
 
 const ResumePage = () => {
     const [currentStepIndex, setCurrentStepIndex] = useState(0);
@@ -65,4 +66,4 @@ const ResumePage = () => {
     );
 };
 
-export default ResumePage;
+export default Protected(ResumePage);
