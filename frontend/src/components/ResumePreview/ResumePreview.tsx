@@ -24,7 +24,9 @@ const ResumePreview = (props: ResumePreviewProps) => {
             <PersonalInfoPreview isLoading={isLoading} resumeInfo={resumeInfo} />
 
             {/* {Professional Exp} */}
-            <ExperiencePreview isLoading={isLoading} resumeInfo={resumeInfo} />
+            {resumeInfo.experiences.length > 0 &&
+                <ExperiencePreview isLoading={isLoading} resumeInfo={resumeInfo} />
+            }
 
             {resumeInfo.projects.length > 0 &&
                 <PersonalProjectsPreview resumeInfo={resumeInfo} isLoading={isLoading} />

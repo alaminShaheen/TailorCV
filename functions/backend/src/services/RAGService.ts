@@ -87,7 +87,7 @@ async function generateResumeContent(resumeRequest: GenerateResumeRequestDto, re
                     ${resumeRequest.jobDescription || "N/A"}
                     
                     Work experience:
-                    ${resumeRequest.experiences.map(experience => {
+                    ${resumeRequest.experiences.length > 0 ? resumeRequest.experiences.map(experience => {
                         return `
                         Position: ${experience.designation || "N/A"} 
                         Company Name: ${experience.companyName || "N/A"} 
@@ -96,27 +96,27 @@ async function generateResumeContent(resumeRequest: GenerateResumeRequestDto, re
                         Description:
                         ${experience.jobDetails.map((detail, index) => `${index}. ${detail}`).join("\n\n")}
                     `;
-                    })}
+                    }) : "N/A"}
                        
                     Education:
-                    ${resumeRequest.education.map(education => {
+                    ${resumeRequest.education.length > 0 ? resumeRequest.education.map(education => {
                         return `
                         Degree: ${education.degreeName || "N/A"} ${education.duration.isPresent ? `Studying  at ${education.institutionName || "N/A"}` : `Graduated with a ${education.degreeName || "N/A"} at ${education.institutionName || "N/A"} on ${education.duration.to}`}
                         Institution: ${education.institutionName || "N/A"}
                         Location: ${education.location || "N/A"}
-                        Duration: from ${education.institutionName || "N/A"} to ${education.duration.to || "Present"} 
+                        Duration: from ${education.duration.from || "N/A"} to ${education.duration.to || "Present"} 
                     `;
-                    })}
+                    }) : "N/A"}
                     
                     Projects:
-                    ${resumeRequest.projects.map(project => {
+                    ${resumeRequest.projects.length > 0 ? resumeRequest.projects.map(project => {
                         return `
                         Title: ${project.title}
                         Technologies used: ${project.technologies.skills.map(tech => tech.skill).join(", ")}
                         Description:
                         ${project.projectDetails.map((details, index) => `${index}. ${details.detail}`).join("\n\n")}
                     `;
-                    })}
+                    }) : "N/A"}
                 `
                 }
             ]

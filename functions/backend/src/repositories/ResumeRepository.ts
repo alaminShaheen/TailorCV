@@ -173,7 +173,7 @@ function normalizeDates(resumeData: Partial<Resume>) {
                 ...(education.duration.to ? {to: new Date(education.duration.to)} : {}),
             } as Duration
         };
-    });
+    }) || [];
 
     resumeData.experiences = resumeData.experiences?.map(experience => {
         return {
@@ -184,7 +184,9 @@ function normalizeDates(resumeData: Partial<Resume>) {
                 ...(experience.duration.to ? {to: new Date(experience.duration.to)} : {}),
             } as Duration
         }
-    });
+    }) || [];
+
+    return resumeData;
 }
 
 async function updateResume(resumeId: string, resumeData: Partial<Resume>): Promise<Resume | null> {
@@ -195,7 +197,9 @@ async function updateResume(resumeId: string, resumeData: Partial<Resume>): Prom
             return null;
         }
 
-        normalizeDates(resumeData);
+        resumeData = normalizeDates(resumeData);
+
+        logging.log(resumeData);
 
         await resumesSnapshot.ref.update({ ...resumeData, updatedAt: new Date() });
         const updateResume = await resumesSnapshot.ref.get();
