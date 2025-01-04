@@ -29,7 +29,7 @@ const AddResume = () => {
         if (isError) {
             handleErrors(error);
         }
-    }, [error, handleErrors]);
+    }, [error, handleErrors, isError]);
 
     return (
         <>

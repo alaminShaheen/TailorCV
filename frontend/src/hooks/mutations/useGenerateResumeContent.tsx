@@ -33,7 +33,7 @@ export const useGenerateResumeContent = (props: UseGenerateResumeContentProps) =
             });
 
         },
-        onError: (error) => {
+        onError: () => {
             handleErrors(new Error("There was an error updating the resume"));
         }
     });

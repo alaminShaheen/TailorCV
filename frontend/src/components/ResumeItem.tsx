@@ -51,22 +51,16 @@ const ResumeItem = (props: ResumeItemProps) => {
 
     const {
         mutate: deleteResume,
-        isPending: isDeletingResume,
-        isError: isDeleteResumeError,
-        error: deleteResumeError
     } = useDeleteResume({ resumeId: id, onSuccess: onResumeDelete });
 
     const {
         mutate: updateResumeTitle,
-        isError: isUpdateError,
-        error: updateError,
-        isPending: isUpdatingTitle
     } = useRenameResumeTitle({ resumeId: id, onSuccess: onResumeTitleUpdate });
 
     const viewResume = useCallback((event: MouseEvent<HTMLDivElement>) => {
         event.preventDefault();
         router.push(ROUTES.RESUME(id));
-    }, [router]);
+    }, [id, router]);
 
     const onMoreOptionsClick = useCallback((event: MouseEvent<HTMLButtonElement>) => {
         event.stopPropagation();

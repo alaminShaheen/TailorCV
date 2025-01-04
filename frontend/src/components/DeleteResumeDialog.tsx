@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback } from "react";
 import {
     AlertDialogAction,
     AlertDialogCancel,
@@ -33,7 +33,7 @@ const RenameTitleDialog = (props: RenameTitleDialogProps) => {
                 <AlertDialogCancel>
                     Close
                 </AlertDialogCancel>
-                <AlertDialogAction onClick={onConfirmClick} className={buttonVariants({variant: "destructive"})}>
+                <AlertDialogAction onClick={onConfirmClick} className={buttonVariants({ variant: "destructive" })}>
                     Delete
                 </AlertDialogAction>
             </AlertDialogFooter>

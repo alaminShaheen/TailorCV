@@ -29,7 +29,7 @@ const Education = (props: EducationProps) => {
         control: form.control,
         name: "education"
     });
-    const includeEducation = useMemo(() => form.watch("includeEducation"), [form.watch]);
+    const includeEducation = useMemo(() => form.watch("includeEducation"), [form]);
 
     const divScrolledRef = useCallback((node: HTMLDivElement | null) => {
         const observer = new IntersectionObserver(

@@ -4,5 +4,5 @@ import { Resume } from "@/models/Resume";
 import { ResumeBuilder } from "@/models/forms/ResumeBuilder";
 
 export function generateResumeContent(resumeId: string, resumeData: Partial<ResumeBuilder>) {
-    return axiosInstance.post<{}, AxiosResponse<Resume>, Partial<Resume>>(`/generate/resume-content/${resumeId}`, resumeData);
+    return axiosInstance.post<object, AxiosResponse<Resume>, Partial<Resume>>(`/generate/resume-content/${resumeId}`, resumeData);
 }

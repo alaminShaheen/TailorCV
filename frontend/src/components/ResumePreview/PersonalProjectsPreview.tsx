@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useCallback } from "react";
-import { Experience, Project, Resume } from "@/models/Resume";
+import { Project, Resume } from "@/models/Resume";
 import SkeletonLoader from "@/components/ResumePreview/SkeletonLoader";
 
 interface PropsType {
@@ -11,10 +11,6 @@ interface PropsType {
 
 const PersonalProjectsPreview = (props: PropsType) => {
     const { resumeInfo, isLoading } = props;
-
-    if (isLoading) {
-        return <SkeletonLoader />;
-    }
 
     const renderDetails = useCallback((projects: Project) => {
         const allTechnologies = resumeInfo.projects.reduce((allTech, project) => {
@@ -42,8 +38,12 @@ const PersonalProjectsPreview = (props: PropsType) => {
                     </li>;
                 })
             }
-        </ul>
+        </ul>;
     }, [resumeInfo]);
+
+    if (isLoading) {
+        return <SkeletonLoader />;
+    }
 
     return (
         <div className="w-full my-1">

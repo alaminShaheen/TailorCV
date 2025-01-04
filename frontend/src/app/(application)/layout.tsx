@@ -34,11 +34,11 @@ const AuthLayout = (props: AuthLayoutProps) => {
         } catch (error) {
             handleErrors(error);
         }
-    }, [signOut, handleErrors]);
+    }, [router, handleErrors]);
 
     const onThemeChange = useCallback(() => {
         setTheme(resolvedTheme === "dark" ? "light" : "dark");
-    }, [resolvedTheme]);
+    }, [resolvedTheme, setTheme]);
 
     const resolvedLogo = useMemo(() => {
         return resolvedTheme === "dark" ? "/logo-dark.svg" : "/logo.svg";

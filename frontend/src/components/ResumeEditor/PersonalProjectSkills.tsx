@@ -70,7 +70,7 @@ const PersonalProjectSkills = (props: PersonalProjectSkills) => {
                 }
             }
         }
-    }, [append, form.trigger, form.getValues, form.setValue, index, updateResume, updateResumeReflection]);
+    }, [form, index, append, updateResume, updateResumeReflection]);
 
     return (
         <div className="flex flex-col gap-2 mt-2">

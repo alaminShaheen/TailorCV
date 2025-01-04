@@ -17,8 +17,8 @@ type GeneralInformationProps = {
 }
 
 const GeneralInformation = (props: GeneralInformationProps) => {
-    const { id, onScrollFocus, updateResume = false, } = props;
-    const { resumeInfo, updateResumeReflection, isLoading, saveResume } = useResumeContext();
+    const { id, onScrollFocus, updateResume = false } = props;
+    const { updateResumeReflection, isLoading } = useResumeContext();
     const form = useFormContext<ResumeBuilder>();
 
     const divScrolledRef = useCallback((node: HTMLDivElement | null) => {

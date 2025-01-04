@@ -2,20 +2,13 @@
 
 import Link from "next/link";
 import { Check } from "lucide-react";
-import { useTheme } from "next-themes";
-import React, { useCallback } from "react";
+import React from "react";
 
 import RegistrationForm from "@/components/RegistrationForm";
 import { SparklingGrid } from "@/components/SparklingGrid";
 import { ROUTES } from "@/constants/Routes";
 
 const Register = () => {
-    const { resolvedTheme, setTheme } = useTheme();
-
-    const onThemeChange = useCallback(() => {
-        setTheme(resolvedTheme === "dark" ? "light" : "dark");
-    }, [resolvedTheme]);
-
     return (
         <div className="flex w-full">
             <div className="lg:w-1/2 relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">
@@ -93,7 +86,8 @@ const Register = () => {
                         </Link>
                         .
                     </p>
-                    <span className="text-center text-sm text-muted-foreground">Already have an account? <Link className="text-primary underline" href={ROUTES.LOGIN}>Login</Link></span>
+                    <span className="text-center text-sm text-muted-foreground">Already have an account? <Link
+                        className="text-primary underline" href={ROUTES.LOGIN}>Login</Link></span>
                 </div>
             </div>
         </div>

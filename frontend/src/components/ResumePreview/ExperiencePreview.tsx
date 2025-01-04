@@ -11,11 +11,6 @@ interface PropsType {
 }
 
 const ExperiencePreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
-
-    if (isLoading) {
-        return <SkeletonLoader />;
-    }
-
     const renderDetails = useCallback((jobDetails: Experience["jobDetails"]) => {
         const allTechnologies = jobDetails.reduce((technologiesUsed, currentDetail) => {
             return new Set([...technologiesUsed, ...currentDetail.technologiesToHighlight.map(tech => tech.toLowerCase())]);
@@ -36,6 +31,11 @@ const ExperiencePreview: FC<PropsType> = ({ resumeInfo, isLoading }) => {
             </li>;
         });
     }, []);
+
+    if (isLoading) {
+        return <SkeletonLoader />;
+    }
+
 
     return (
         <div className="w-full my-1">

@@ -32,7 +32,7 @@ export const useUpdateResume = (props: UseUpdateResumeProps) => {
             });
 
         },
-        onError: (error) => {
+        onError: () => {
             handleErrors(new Error("There was an error updating the resume"));
         }
     });

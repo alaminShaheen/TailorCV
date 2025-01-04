@@ -44,7 +44,7 @@ const ExperienceDetails = (props: ExperienceDetailsProps) => {
                 };
             });
         }
-    }, [remove, fields.length, updateResume, updateResumeReflection]);
+    }, [fields.length, remove, updateResume, updateResumeReflection, index]);
 
     const addEmptyJobDetail = useCallback(() => {
         const newJobDetail = {
@@ -64,7 +64,7 @@ const ExperienceDetails = (props: ExperienceDetailsProps) => {
                 };
             });
         }
-    }, [append, updateResume, updateResumeReflection]);
+    }, [append, index, updateResume, updateResumeReflection]);
 
     return (
         <div className="flex flex-col">

@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
@@ -8,7 +7,6 @@ import { Mail, RefreshCcw } from "lucide-react";
 import React, { useCallback } from "react";
 
 import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import { ROUTES } from "@/constants/Routes";
 import { Button } from "@/components/ui/button";
 import { PasswordResetForm } from "@/models/forms/PasswordResetForm";

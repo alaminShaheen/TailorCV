@@ -3,5 +3,5 @@ import { AxiosResponse } from "axios";
 import { Resume } from "@/models/Resume";
 
 export function updateResume(resumeId: string, resumeData: Partial<Resume>) {
-    return axiosInstance.put<{}, AxiosResponse<Resume>, Partial<Resume>>(`/resume/${resumeId}`, resumeData);
+    return axiosInstance.put<object, AxiosResponse<Resume>, Partial<Resume>>(`/resume/${resumeId}`, resumeData);
 }

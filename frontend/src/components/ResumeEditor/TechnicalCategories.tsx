@@ -48,10 +48,6 @@ const TechnicalCategories = (props: TechnicalSkillsProps) => {
         }
     }, [id, onScrollFocus]);
 
-    if (isLoading) {
-        return <GeneralInformationSkeleton />;
-    }
-
     const deleteSkillCategory = useCallback((deleteIndex: number) => {
         if (fields.length === 1) {
             return;
@@ -80,6 +76,10 @@ const TechnicalCategories = (props: TechnicalSkillsProps) => {
             });
         }
     }, [append, updateResume, updateResumeReflection]);
+
+    if (isLoading) {
+        return <GeneralInformationSkeleton />;
+    }
 
     return (
         <div className="flex flex-col mx-auto gap-y-6 w-full p-4 border-2 border-primary rounded-md"

@@ -5,13 +5,13 @@ import { Button } from "@/components/ui/button";
 type DownloadProps = {
     title: string;
     isLoading: boolean;
-    handleDownload: () => Promise<void>;
+    handleDownload: () => void;
     disabled?: boolean;
 }
 
 const Download = (props: DownloadProps) => {
-    const { isLoading, title, handleDownload, disabled = false, } = props;
-    const [loading, setLoading] = useState(false);
+    const { isLoading, handleDownload, disabled = false, } = props;
+    const [loading] = useState(false);
 
     return (
         <Button

@@ -32,7 +32,7 @@ const SkillPreview = (props: SkillsPreviewProps) => {
 
             <div className="flex flex-col gap-1 my-1 min-h-9 text-[13px]">
                 {
-                    resumeInfo?.technicalSkills.map((technicalSkill, index) => (
+                    resumeInfo?.technicalSkills.map((technicalSkill) => (
                         <div key={technicalSkill.category}>
                             <span className="font-bold">{technicalSkill.category}:{" "}</span>
                             <span>{technicalSkill.skills.map(skillSet => skillSet.skill).join(", ")}</span>

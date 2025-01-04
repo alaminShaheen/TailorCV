@@ -1,4 +1,4 @@
-import { Component, ComponentType, ReactNode } from "react";
+import { ComponentType } from "react";
 
 export type ResumeFormStep<T> = {
     title: string;

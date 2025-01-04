@@ -3,12 +3,10 @@
 import Image from "next/image";
 import { useTheme } from "next-themes";
 import { Moon, Sun } from "lucide-react";
-import { usePathname } from "next/navigation";
 import { useMediaQuery } from "usehooks-ts";
 import React, { ReactNode, useCallback, useMemo } from "react";
 
 import { cn } from "@/lib/utils";
-import { ROUTES } from "@/constants/Routes";
 import { Button, buttonVariants } from "@/components/ui/button";
 
 type AuthLayoutProps = Readonly<{ children: ReactNode }>;
@@ -17,12 +15,11 @@ const AuthLayout = (props: AuthLayoutProps) => {
     const { children } = props;
 
     const { resolvedTheme, setTheme } = useTheme();
-    const isLargeScreen = useMediaQuery('(min-width: 1024px)');
-    const pathname = usePathname();
+    const isLargeScreen = useMediaQuery("(min-width: 1024px)");
 
     const onThemeChange = useCallback(() => {
         setTheme(resolvedTheme === "dark" ? "light" : "dark");
-    }, [resolvedTheme]);
+    }, [resolvedTheme, setTheme]);
 
     const resolvedLogo = useMemo(() => {
         if (isLargeScreen) {

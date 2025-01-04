@@ -41,7 +41,7 @@ export const useRenameResumeTitle = (props: UseDeleteResumeProps) => {
             });
 
         },
-        onError: (error) => {
+        onError: () => {
             handleErrors(new Error("An error occurred while updating resume title"));
         }
     });

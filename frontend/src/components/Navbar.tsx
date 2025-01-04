@@ -25,7 +25,7 @@ const Navbar = () => {
 
     const onThemeChange = useCallback(() => {
         setTheme(resolvedTheme === "dark" ? "light" : "dark");
-    }, [resolvedTheme]);
+    }, [resolvedTheme, setTheme]);
 
     const onLogout = useCallback(async () => {
         try {
@@ -34,7 +34,7 @@ const Navbar = () => {
         } catch (error) {
             handleErrors(error);
         }
-    }, [signOut, handleErrors]);
+    }, [router, handleErrors]);
 
     return (
         <nav className="p-6 flex justify-between items-center bg-background">

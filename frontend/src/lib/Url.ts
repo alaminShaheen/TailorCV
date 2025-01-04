@@ -10,7 +10,7 @@ export function isValidLinkedinURL(url: string) {
 
 export function normalizeURL(url: string) {
     // Trim whitespace and remove protocols (http:// or https://)
-    let normalizedURL = url.trim().replace(/^https?:\/\//i, "");
+    const normalizedURL = url.trim().replace(/^https?:\/\//i, "");
 
     // Remove "www." if present
     return normalizedURL.replace(/^www\./i, "");

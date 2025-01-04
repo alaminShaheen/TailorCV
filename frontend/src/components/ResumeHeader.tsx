@@ -23,7 +23,7 @@ type ResumeHeaderProps = {
 const ResumeHeader = (props: ResumeHeaderProps) => {
     const { previewRef, onSave } = props;
     const { isLoading, resumeInfo, saveResume } = useResumeContext();
-    const [downloadingResume, setDownloadingResume] = useState(false);
+    const [downloadingResume] = useState(false);
     const router = useRouter();
 
     const onResumeDelete = useCallback(() => {
@@ -39,7 +39,7 @@ const ResumeHeader = (props: ResumeHeaderProps) => {
         isPending: isDeletingResume,
     } = useDeleteResume({ resumeId: resumeInfo.id, onSuccess: onResumeDelete });
 
-    const download = useReactToPrint({ contentRef: previewRef, documentTitle: resumeInfo.title || "Untitled Resume" });
+    const download = useReactToPrint({ contentRef: previewRef as never, documentTitle: resumeInfo.title || "Untitled Resume" });
 
     const {
         mutate: updateResumeTitle,
@@ -58,7 +58,7 @@ const ResumeHeader = (props: ResumeHeaderProps) => {
 
             updateResumeTitle({ title: newTitle });
         },
-        [resumeInfo?.title, saveResume, updateResumeTitle]
+        [resumeInfo, saveResume, updateResumeTitle]
     );
 
     const onDeleteClicked = useCallback(() => {

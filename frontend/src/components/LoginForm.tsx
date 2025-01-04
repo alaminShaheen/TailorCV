@@ -2,11 +2,9 @@
 
 import React, { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { cn, toastDateFormat } from "@/lib/utils";
-import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
-import { Eye, EyeOff, Mail, RefreshCcw, Lock } from "lucide-react";
+import { Eye, EyeOff, Lock, Mail, RefreshCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ROUTES } from "@/constants/Routes";
 import { LoginForm as LoginFormModel } from "@/models/forms/LoginForm";
@@ -61,7 +59,7 @@ const LoginForm = () => {
         } finally {
             setLoading(false);
         }
-    }, [reset, router, handleErrors]);
+    }, [onUserLogin, reset, router, handleErrors, setError]);
 
     const onThirdPartyLoginSuccess = useCallback(() => {
         router.push(ROUTES.ALL_RESUMES);
@@ -92,7 +90,7 @@ const LoginForm = () => {
         } finally {
             setLoading(false);
         }
-    }, [handleErrors, onUserLogin, router, thirdPartyMutate]);
+    }, [handleErrors, onUserLogin, setError, thirdPartyMutate]);
 
     const loginWithGithub = useCallback(async () => {
         try {
@@ -106,7 +104,7 @@ const LoginForm = () => {
         } finally {
             setLoading(false);
         }
-    }, [onUserLogin, router, handleErrors, thirdPartyMutate]);
+    }, [onUserLogin, thirdPartyMutate, handleErrors, setError]);
 
     return (
         <form className="flex flex-col gap-y-4" onSubmit={handleSubmit(onSubmit)}>

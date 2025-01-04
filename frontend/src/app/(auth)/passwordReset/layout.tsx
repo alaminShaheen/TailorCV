@@ -22,7 +22,7 @@ const AuthLayout = (props: AuthLayoutProps) => {
 
     const onThemeChange = useCallback(() => {
         setTheme(resolvedTheme === "dark" ? "light" : "dark");
-    }, [resolvedTheme]);
+    }, [resolvedTheme, setTheme]);
 
     const resolvedLogo = useMemo(() => {
         return resolvedTheme === "dark" ? "/logo-dark.svg" : "/logo.svg";

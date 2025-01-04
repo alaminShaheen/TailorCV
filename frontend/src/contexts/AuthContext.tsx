@@ -19,7 +19,7 @@ const APP_CONTEXT_DEFAULT_VALUES: AuthContextType = {
     appLoading: false,
     user: null,
     authenticated: false,
-    onUserLogin: async (user: User) => {
+    onUserLogin: async () => {
     }
 };
 export const AuthContext = createContext<AuthContextType>(APP_CONTEXT_DEFAULT_VALUES);
@@ -34,9 +34,18 @@ export const AuthContextProvider = (props: AppContextProviderProps) => {
     const [appLoading, setAppLoading] = useState(true);
     const authFetchCountRef = useRef<number>(1);
     const [authenticated, setAuthenticated] = useState(APP_CONTEXT_DEFAULT_VALUES.authenticated);
-    const [accessToken, setAccessToken] = useState("");
+    const [, setAccessToken] = useState("");
     const router = useRouter();
     const pathname = usePathname();
+
+    const onUserLogin = useCallback(async (user: User) => {
+        const token = await user?.getIdToken();
+        if (token) {
+            addAxiosAuthHeader(token);
+            setAccessToken(token);
+            setUser(user);
+        }
+    }, []);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -48,29 +57,12 @@ export const AuthContextProvider = (props: AppContextProviderProps) => {
             setAppLoading(authFetchCountRef.current >= 2);
         });
         return () => unsubscribe();
-    }, []);
-
-    const onUserLogin = useCallback(async (user: User) => {
-        const token = await user?.getIdToken();
-        if (token) {
-            addAxiosAuthHeader(token);
-            setAccessToken(token);
-            setUser(user);
-        }
-    }, []);
-
-    const refreshToken = useCallback(async () => {
-        const newToken = await user?.getIdToken(true);
-        if (newToken) {
-            addAxiosAuthHeader(newToken);
-            setAccessToken(newToken);
-        }
-    }, [user]);
+    }, [onUserLogin]);
 
     useEffect(() => {
         const authRoutes = [ROUTES.LOGIN, ROUTES.REGISTER, ROUTES.PASSWORD_RESET];
         if (authenticated && !appLoading && authRoutes.includes(pathname)) {
-            // router.push(ROUTES.HOME);
+            router.back();
         }
     }, [pathname, authenticated, appLoading, router]);
 
