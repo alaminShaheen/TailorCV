@@ -10,7 +10,10 @@ const nextConfig: NextConfig = {
         FIREBASE_APP_ID: process.env.FIREBASE_APP_ID,
 
         API_SERVICE_BASE_URL: process.env.API_SERVICE_BASE_URL
-    }
+    },
+    eslint: {
+        ignoreDuringBuilds: false
+    },
     /* config options here */
 };
 

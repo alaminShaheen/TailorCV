@@ -62,9 +62,9 @@ export const AuthContextProvider = (props: AppContextProviderProps) => {
     useEffect(() => {
         const authRoutes = [ROUTES.LOGIN, ROUTES.REGISTER, ROUTES.PASSWORD_RESET];
         if (authenticated && !appLoading && authRoutes.includes(pathname)) {
-            router.back();
+            router.push(ROUTES.HOME);
         }
-    }, [pathname, authenticated, appLoading, router]);
+    }, [pathname, authenticated, router, appLoading]);
 
     return (
         <AuthContext.Provider

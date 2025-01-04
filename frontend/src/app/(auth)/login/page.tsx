@@ -8,8 +8,6 @@ import LoginForm from "@/components/LoginForm";
 import { ROUTES } from "@/constants/Routes";
 
 const Login = () => {
-
-
     return (
         <div className="flex w-full">
             <div className="w-full lg:w-1/2 lg:p-8 h-full">
