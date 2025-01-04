@@ -15,208 +15,208 @@ import { Protected } from "@/components/Protected";
 const Create = () => {
     const { isFetchingResume, resumeInfo } = useResumeContext();
     const methods = useForm<ResumeBuilder>({
-        // defaultValues: {
-        //     personalInformation: { ...resumeInfo.personalInformation },
-        //     projects: [{
-        //         title: "",
-        //         githubUrl: "",
-        //         technologies: { skillName: "", skills: [] },
-        //         projectDetails: [{ detail: "" }]
-        //     }],
-        //     experiences: [{
-        //         designation: "",
-        //         companyName: "",
-        //         companyUrl: "",
-        //         role: "",
-        //         location: "",
-        //         jobType: JobType.IN_OFFICE,
-        //         jobDetails: [{ detail: "" }],
-        //         duration: {
-        //             isPresent: false,
-        //             to: new Date(),
-        //             from: new Date()
-        //         }
-        //     }],
-        //     education: [{
-        //         institutionName: "",
-        //         location: "",
-        //         degreeName: "",
-        //         duration: {
-        //             isPresent: false,
-        //             to: new Date(),
-        //             from: new Date()
-        //         }
-        //     }],
-        //     addJobDescription: false,
-        //     haveWorkExperience: true,
-        //     includeAchievements: false,
-        //     includeProjects: false,
-        //     includeEducation: true,
-        //     includeTechnicalSkills: false,
-        //     technicalSkills: [{
-        //         category: "",
-        //         skills: []
-        //     }],
-        //     jobDescription: ""
-        // }
         defaultValues: {
-            personalInformation: {
-                name: "John Doe",
-                personalWebsite: "https://johndoe.dev",
-                homeAddress: "123 Main Street, Anytown, USA",
-                phoneNumber: "+1234567890",
-                email: "john.doe@example.com",
-                linkedInProfileUrl: "https://linkedin.com/in/johndoe",
-                githubProfileUrl: "https://github.com/johndoe"
-            },
-            projects: [
-                {
-                    title: "Project Alpha",
-                    githubUrl: "https://github.com/johndoe/project-alpha",
-                    technologies: {
-                        skills: [{ skill: "React" }, { skill: "Node.js" }, { skill: "MongoDB" }]
-                    },
-                    projectDetails: [
-                        { detail: "Built a full-stack web application for managing tasks." },
-                        { detail: "Implemented a responsive design with Tailwind CSS." }
-                    ]
-                },
-                {
-                    title: "Project Beta",
-                    githubUrl: "https://github.com/johndoe/project-beta",
-                    technologies: {
-                        skills: [{ skill: "Python" }, { skill: "TensorFlow" }, { skill: "Pandas" }]
-                    },
-                    projectDetails: [
-                        { detail: "Developed a machine learning model for sentiment analysis." },
-                        { detail: "Used TensorFlow for model training and Pandas for data preprocessing." }
-                    ]
+            personalInformation: { ...resumeInfo.personalInformation },
+            projects: [{
+                title: "",
+                githubUrl: "",
+                technologies: { skillName: "", skills: [] },
+                projectDetails: [{ detail: "" }]
+            }],
+            experiences: [{
+                designation: "",
+                companyName: "",
+                companyUrl: "",
+                role: "",
+                location: "",
+                jobType: JobType.IN_OFFICE,
+                jobDetails: [{ detail: "" }],
+                duration: {
+                    isPresent: false,
+                    to: new Date(),
+                    from: new Date()
                 }
-            ],
-            experiences: [
-                {
-                    designation: "Software Engineer",
-                    companyName: "TechCorp",
-                    companyUrl: "https://techcorp.com",
-                    role: "Developed scalable web applications",
-                    location: "New York, NY",
-                    jobType: JobType.IN_OFFICE,
-                    jobDetails: [
-                        { detail: "Led the development of a customer portal using React." },
-                        { detail: "Optimized backend APIs to improve performance by 20%." }
-                    ],
-                    duration: {
-                        isPresent: true,
-                        from: new Date("2022-05-01")
-                    }
-                },
-                {
-                    designation: "Junior Developer",
-                    companyName: "DevStudio",
-                    companyUrl: "https://devstudio.com",
-                    role: "Worked on feature development and bug fixes",
-                    location: "San Francisco, CA",
-                    jobType: JobType.IN_OFFICE,
-                    jobDetails: [
-                        { detail: "Enhanced user authentication system." },
-                        { detail: "Collaborated with cross-functional teams to deliver projects on time." }
-                    ],
-                    duration: {
-                        isPresent: false,
-                        to: new Date("2022-04-30"),
-                        from: new Date("2020-08-01")
-                    }
-                },
-                {
-                    designation: "Intern",
-                    companyName: "CodeWorks",
-                    companyUrl: "https://codeworks.com",
-                    role: "Assisted in developing client-side applications",
-                    location: "Remote",
-                    jobType: JobType.REMOTE,
-                    jobDetails: [
-                        { detail: "Implemented UI components using React." },
-                        { detail: "Wrote unit tests to ensure code quality." }
-                    ],
-                    duration: {
-                        isPresent: false,
-                        to: new Date("2020-07-31"),
-                        from: new Date("2020-05-01")
-                    }
+            }],
+            education: [{
+                institutionName: "",
+                location: "",
+                degreeName: "",
+                duration: {
+                    isPresent: false,
+                    to: new Date(),
+                    from: new Date()
                 }
-            ],
-            education: [
-                {
-                    institutionName: "University of Anytown",
-                    location: "Anytown, USA",
-                    degreeName: "Bachelor of Computer Science",
-                    duration: {
-                        isPresent: false,
-                        to: new Date("2020-05-01"),
-                        from: new Date("2016-08-01")
-                    }
-                },
-                {
-                    institutionName: "High School of Anytown",
-                    location: "Anytown, USA",
-                    degreeName: "High School Diploma",
-                    duration: {
-                        isPresent: false,
-                        to: new Date("2016-06-01"),
-                        from: new Date("2012-08-01")
-                    }
-                }
-            ],
+            }],
             addJobDescription: false,
             haveWorkExperience: true,
             includeAchievements: false,
-            includeProjects: true,
+            includeProjects: false,
             includeEducation: true,
-            includeTechnicalSkills: true,
-            technicalSkills: [
-                {
-                    category: "Programming Languages",
-                    skills: [
-                        { skill: "Python" },
-                        { skill: "JavaScript" },
-                        { skill: "TypeScript" }
-                    ]
-                },
-                {
-                    category: "Frameworks and Libraries",
-                    skills: [
-                        { skill: "React" },
-                        { skill: "Node.js" },
-                        { skill: "Express.js" }
-                    ]
-                },
-                {
-                    category: "Databases",
-                    skills: [
-                        { skill: "MySQL" },
-                        { skill: "MongoDB" },
-                        { skill: "PostgreSQL" }
-                    ]
-                },
-                {
-                    category: "Cloud Platforms",
-                    skills: [
-                        { skill: "AWS" },
-                        { skill: "GCP" },
-                        { skill: "Azure" }
-                    ]
-                },
-                {
-                    category: "Testing Tools",
-                    skills: [
-                        { skill: "Jest" },
-                        { skill: "Selenium" },
-                        { skill: "Mocha" }
-                    ]
-                }
-            ],
-            jobDescription: "",
+            includeTechnicalSkills: false,
+            technicalSkills: [{
+                category: "",
+                skills: []
+            }],
+            jobDescription: ""
         }
+        // defaultValues: {
+        //     personalInformation: {
+        //         name: "John Doe",
+        //         personalWebsite: "https://johndoe.dev",
+        //         homeAddress: "123 Main Street, Anytown, USA",
+        //         phoneNumber: "+1234567890",
+        //         email: "john.doe@example.com",
+        //         linkedInProfileUrl: "https://linkedin.com/in/johndoe",
+        //         githubProfileUrl: "https://github.com/johndoe"
+        //     },
+        //     projects: [
+        //         {
+        //             title: "Project Alpha",
+        //             githubUrl: "https://github.com/johndoe/project-alpha",
+        //             technologies: {
+        //                 skills: [{ skill: "React" }, { skill: "Node.js" }, { skill: "MongoDB" }]
+        //             },
+        //             projectDetails: [
+        //                 { detail: "Built a full-stack web application for managing tasks." },
+        //                 { detail: "Implemented a responsive design with Tailwind CSS." }
+        //             ]
+        //         },
+        //         {
+        //             title: "Project Beta",
+        //             githubUrl: "https://github.com/johndoe/project-beta",
+        //             technologies: {
+        //                 skills: [{ skill: "Python" }, { skill: "TensorFlow" }, { skill: "Pandas" }]
+        //             },
+        //             projectDetails: [
+        //                 { detail: "Developed a machine learning model for sentiment analysis." },
+        //                 { detail: "Used TensorFlow for model training and Pandas for data preprocessing." }
+        //             ]
+        //         }
+        //     ],
+        //     experiences: [
+        //         {
+        //             designation: "Software Engineer",
+        //             companyName: "TechCorp",
+        //             companyUrl: "https://techcorp.com",
+        //             role: "Developed scalable web applications",
+        //             location: "New York, NY",
+        //             jobType: JobType.IN_OFFICE,
+        //             jobDetails: [
+        //                 { detail: "Led the development of a customer portal using React." },
+        //                 { detail: "Optimized backend APIs to improve performance by 20%." }
+        //             ],
+        //             duration: {
+        //                 isPresent: true,
+        //                 from: new Date("2022-05-01")
+        //             }
+        //         },
+        //         {
+        //             designation: "Junior Developer",
+        //             companyName: "DevStudio",
+        //             companyUrl: "https://devstudio.com",
+        //             role: "Worked on feature development and bug fixes",
+        //             location: "San Francisco, CA",
+        //             jobType: JobType.IN_OFFICE,
+        //             jobDetails: [
+        //                 { detail: "Enhanced user authentication system." },
+        //                 { detail: "Collaborated with cross-functional teams to deliver projects on time." }
+        //             ],
+        //             duration: {
+        //                 isPresent: false,
+        //                 to: new Date("2022-04-30"),
+        //                 from: new Date("2020-08-01")
+        //             }
+        //         },
+        //         {
+        //             designation: "Intern",
+        //             companyName: "CodeWorks",
+        //             companyUrl: "https://codeworks.com",
+        //             role: "Assisted in developing client-side applications",
+        //             location: "Remote",
+        //             jobType: JobType.REMOTE,
+        //             jobDetails: [
+        //                 { detail: "Implemented UI components using React." },
+        //                 { detail: "Wrote unit tests to ensure code quality." }
+        //             ],
+        //             duration: {
+        //                 isPresent: false,
+        //                 to: new Date("2020-07-31"),
+        //                 from: new Date("2020-05-01")
+        //             }
+        //         }
+        //     ],
+        //     education: [
+        //         {
+        //             institutionName: "University of Anytown",
+        //             location: "Anytown, USA",
+        //             degreeName: "Bachelor of Computer Science",
+        //             duration: {
+        //                 isPresent: false,
+        //                 to: new Date("2020-05-01"),
+        //                 from: new Date("2016-08-01")
+        //             }
+        //         },
+        //         {
+        //             institutionName: "High School of Anytown",
+        //             location: "Anytown, USA",
+        //             degreeName: "High School Diploma",
+        //             duration: {
+        //                 isPresent: false,
+        //                 to: new Date("2016-06-01"),
+        //                 from: new Date("2012-08-01")
+        //             }
+        //         }
+        //     ],
+        //     addJobDescription: false,
+        //     haveWorkExperience: true,
+        //     includeAchievements: false,
+        //     includeProjects: true,
+        //     includeEducation: true,
+        //     includeTechnicalSkills: true,
+        //     technicalSkills: [
+        //         {
+        //             category: "Programming Languages",
+        //             skills: [
+        //                 { skill: "Python" },
+        //                 { skill: "JavaScript" },
+        //                 { skill: "TypeScript" }
+        //             ]
+        //         },
+        //         {
+        //             category: "Frameworks and Libraries",
+        //             skills: [
+        //                 { skill: "React" },
+        //                 { skill: "Node.js" },
+        //                 { skill: "Express.js" }
+        //             ]
+        //         },
+        //         {
+        //             category: "Databases",
+        //             skills: [
+        //                 { skill: "MySQL" },
+        //                 { skill: "MongoDB" },
+        //                 { skill: "PostgreSQL" }
+        //             ]
+        //         },
+        //         {
+        //             category: "Cloud Platforms",
+        //             skills: [
+        //                 { skill: "AWS" },
+        //                 { skill: "GCP" },
+        //                 { skill: "Azure" }
+        //             ]
+        //         },
+        //         {
+        //             category: "Testing Tools",
+        //             skills: [
+        //                 { skill: "Jest" },
+        //                 { skill: "Selenium" },
+        //                 { skill: "Mocha" }
+        //             ]
+        //         }
+        //     ],
+        //     jobDescription: "",
+        // }
     });
     const includeEducation = methods.watch("includeEducation");
     const haveWorkExperience = methods.watch("haveWorkExperience");
