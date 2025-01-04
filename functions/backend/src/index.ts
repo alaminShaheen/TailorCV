@@ -1,6 +1,7 @@
 import "module-alias/register";
 import cors from "cors";
 import express from "express";
+import * as functions from "firebase-functions";
 
 import router from "@/routers/index";
 import logging from "@/utils/logging";
@@ -34,4 +35,4 @@ app.listen(SERVER_PORT, () => {
     logging.log(`Server running on port ${SERVER_PORT}`);
 });
 
-// exports.app = functions.https.onRequest(app);
+exports.app = functions.https.onRequest(app);

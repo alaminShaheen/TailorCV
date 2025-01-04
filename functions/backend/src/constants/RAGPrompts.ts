@@ -4,7 +4,6 @@ import { Project } from "@/models/resume/Project";
 import { Education } from "@/models/resume/Education";
 import { Experience } from "@/models/resume/Experience";
 import { CreateResumeRequestDto } from "@/models/dtos/CreateResumeRequestDto";
-import { Resume } from "@/models/Resume";
 
 const GET_WORK_EXPERIENCE = function(experiences: Experience[]) {
     return `
@@ -26,7 +25,8 @@ const GET_EDUCATION = function(education: Education[]) {
         ${education.map(educationRecord => {
         return `
             Degree: ${educationRecord.duration.isPresent ? `Studying ${educationRecord.degreeName || "N/A"} at ${educationRecord.institutionName || "N/A"}` : `Graduated with a ${educationRecord.degreeName || "N/A"} at ${educationRecord.institutionName || "N/A"} on ${educationRecord.duration.to}`} 
-        `})}
+        `;
+    })}
     `;
 };
 
@@ -97,7 +97,7 @@ export const RAGPrompts = {
                 `
             }
         ];
-    },
+    }
     // GET_RESUME_PROMPT: (resume: Resume): ChatCompletionMessageParam[] => {
     //     return [
     //         {
