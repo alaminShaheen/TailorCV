@@ -40,7 +40,7 @@ const Login = () => {
                         .
                     </p>
                     <span className="text-center text-sm text-muted-foreground">Don&#39;t have an account? <Link
-                        className="text-primary underline" href={ROUTES.LOGIN}>Register here</Link></span>
+                        className="text-primary underline" href={ROUTES.REGISTER}>Register here</Link></span>
                 </div>
             </div>
             <div className="relative lg:w-1/2 hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">

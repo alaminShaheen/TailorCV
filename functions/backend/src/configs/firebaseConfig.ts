@@ -18,7 +18,6 @@ import {
 } from "@/configs/config";
 import { cert, initializeApp as initializeAdminApp } from "firebase-admin/app";
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
 
 
 const firebaseConfig = {
@@ -47,5 +46,3 @@ const firebaseServiceConfig = {
 
 export const firebaseApp = initializeApp(firebaseConfig);
 export const firebaseAdminApp = initializeAdminApp({ credential: cert(firebaseServiceConfig) });
-export const firebaseAuth = getAuth(firebaseApp);
-

@@ -12,24 +12,29 @@ import { CLIENT_ORIGIN, SERVER_PORT } from "@/configs/config";
 const app = express();
 app.use(cors({
     origin: CLIENT_ORIGIN,
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    methods: ["GET", "POST", "OPTIONS", "PUT", "PATCH", "DELETE"],
+    credentials: true
 }));
 app.use(express.json());
 
-const appRouter = router();
 
+const appRouter = router();
 
 app.use(loggingHandler);
 
-
 app.options("*", cors({
     origin: CLIENT_ORIGIN,
-    allowedHeaders: ['Content-Type', 'Authorization']
+    allowedHeaders: ["Content-Type", "Authorization"],
+    methods: ["GET", "POST", "OPTIONS", "PUT", "PATCH", "DELETE"],
+    credentials: true
 }));
 
 app.use("/api", appRouter);
 
+
 app.use(errorHandler);
+
 
 app.listen(SERVER_PORT, () => {
     logging.log(`Server running on port ${SERVER_PORT}`);

@@ -3,7 +3,7 @@ import AddResume from "@/components/AddResume";
 import ResumeList from "@/components/ResumeList";
 
 const Resumes = () => {
-    console.log(process.env.API_SERVICE_BASE_URL);
+    console.log(process.env.API_SERVICE_BASE_URL, "hello");
     return (
         <div className="w-full">
             <div className="w-full mx-auto max-w-7xl py-5 px-5">
