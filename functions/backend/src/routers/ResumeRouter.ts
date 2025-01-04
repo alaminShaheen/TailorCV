@@ -7,11 +7,11 @@ import { resumeTitleValidator } from "@/middlewares/validators/ResumeTitleValida
 export default (router: Router, baseApiUrl: string = "/") => {
     const resumeRouter = Router();
 
+    resumeRouter.delete("/:id", verifyAuthentication, ResumeController.deleteResume);
     resumeRouter.get("/all", verifyAuthentication, ResumeController.getAllResumeMetadata);
     resumeRouter.post("/blank", verifyAuthentication, ResumeController.createBlankResume);
     resumeRouter.post("/:id/rename", verifyAuthentication, resumeTitleValidator(), ResumeController.renameTitle);
     resumeRouter.get("/:id", verifyAuthentication, ResumeController.getResume)
-    resumeRouter.delete("/:id", verifyAuthentication, ResumeController.deleteResume);
     resumeRouter.put("/:id", verifyAuthentication, ResumeController.updateResume);
 
     router.use(baseApiUrl, resumeRouter);

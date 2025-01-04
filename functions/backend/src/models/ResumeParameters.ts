@@ -19,6 +19,7 @@ export type ResumeParameters = {
     title?: string;
     themeColor?: string;
     thumbnail?: string;
+    hasAnsweredQuestions: boolean;
 }
 
 export type FirebaseResumeParameters = {
@@ -34,4 +35,5 @@ export type FirebaseResumeParameters = {
     title?: string;
     themeColor?: string;
     thumbnail?: string;
+    hasAnsweredQuestions: boolean;
 }

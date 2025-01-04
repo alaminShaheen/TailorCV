@@ -4,4 +4,5 @@ export type ResumeMetadata = {
     updatedAt: string;
     title: string;
     thumbnail: string;
+    hasAnsweredQuestions: boolean;
 }

@@ -166,7 +166,8 @@ async function generateResumeContent(resumeRequest: GenerateResumeRequestDto, re
                 githubUrl: resumeRequest.projects[index].githubUrl
             })),
             technicalSkills: resumeRequest.technicalSkills,
-            personalInformation: resumeRequest.personalInformation
+            personalInformation: resumeRequest.personalInformation,
+            hasAnsweredQuestions: true,
         });
 
     } catch (error) {

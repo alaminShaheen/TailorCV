@@ -148,7 +148,8 @@ async function updateResumeTitle(resumeData: RenameResumeTitleRequestDto, userId
             title: resumeData.title,
             updatedAt: new Date(),
             createdAt: new Date(data.updatedAt),
-            id: data.id
+            id: data.id,
+            hasAnsweredQuestions: data.hasAnsweredQuestions,
         } satisfies ResumeMetadata;
 
     } catch (error) {

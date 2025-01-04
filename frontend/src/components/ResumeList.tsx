@@ -33,11 +33,9 @@ const ResumeList = () => {
                         <ResumeItem
                             key={resume.id}
                             id={resume.id}
+                            hasAnsweredQuestions={resume.hasAnsweredQuestions}
                             title={resume.title}
-                            // status={resume.status}
                             updatedAt={resume.updatedAt}
-                            // themeColor={resume.themeColor}
-                            // thumbnail={resume.thumbnail}
                         />
                     ))}
                 </>

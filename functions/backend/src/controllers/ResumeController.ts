@@ -51,7 +51,7 @@ async function deleteResume(request: Request<{ id: string }, {}, {}>, response: 
     try {
         handleFormValidationErrors(request);
         await ResumeService.deleteResume(request.params.id);
-        response.status(200);
+        response.sendStatus(200);
     } catch (error) {
         next(error);
     }

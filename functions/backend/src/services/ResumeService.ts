@@ -28,7 +28,8 @@ async function getAllResumeMetadata(userId: string): Promise<ResumeMetadata[]> {
             id: resume.id,
             createdAt: resume.createdAt,
             updatedAt: resume.updatedAt,
-            title: resume.title
+            title: resume.title,
+            hasAnsweredQuestions: resume.hasAnsweredQuestions,
         }));
     } catch (error) {
         throw error;
@@ -49,7 +50,8 @@ async function createBlankResume(data: BlankResumeRequestDto, userId: string): P
             createdAt: createdResume.createdAt,
             id: createdResume.id,
             updatedAt: createdResume.updatedAt,
-            title: createdResume.title
+            title: createdResume.title,
+            hasAnsweredQuestions: createdResume.hasAnsweredQuestions,
         };
     } catch (error) {
         throw error;

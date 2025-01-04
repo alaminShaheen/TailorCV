@@ -47,5 +47,6 @@ export type Resume = {
     updatedAt: string;
     userId: string;
     title: string;
+    hasAnsweredQuestions: boolean;
     thumbnail: string;
 }

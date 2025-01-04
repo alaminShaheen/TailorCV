@@ -27,12 +27,11 @@ type ResumeItemProps = {
     title: string;
     id: string
     updatedAt: string;
-    // themeColor: string;
-    // thumbnail: string;
+    hasAnsweredQuestions: boolean;
 }
 
 const ResumeItem = (props: ResumeItemProps) => {
-    const { id, updatedAt, title } = props;
+    const { id, updatedAt, title, hasAnsweredQuestions } = props;
     const router = useRouter();
 
     const onResumeDelete = useCallback(() => {
@@ -59,8 +58,12 @@ const ResumeItem = (props: ResumeItemProps) => {
 
     const viewResume = useCallback((event: MouseEvent<HTMLDivElement>) => {
         event.preventDefault();
-        router.push(ROUTES.RESUME(id));
-    }, [id, router]);
+        if (hasAnsweredQuestions) {
+            router.push(ROUTES.RESUME(id));
+        } else {
+            router.push(ROUTES.CREATE_RESUME(id));
+        }
+    }, [hasAnsweredQuestions, id, router]);
 
     const onMoreOptionsClick = useCallback((event: MouseEvent<HTMLButtonElement>) => {
         event.stopPropagation();
@@ -88,25 +91,12 @@ const ResumeItem = (props: ResumeItemProps) => {
             )}
             id="view-resume"
             onClick={viewResume}
-            // style={{ borderColor: themeColor || "" }}
         >
             <div
                 className="flex flex-col w-full h-full items-center rounded-lg justify-center bg-[#fdfdfd] dark:bg-secondary">
                 <div className="w-full flex flex-1 px-1 pt-2">
                     <div
                         className="w-full flex flex-1 bg-white dark:bg-gray-700 rounded-t-lg justify-center items-center">
-                        {/*{thumbnail ? (*/}
-                        {/*    <div className="relative w-full h-full rounded-t-lg overflow-hidden">*/}
-                        {/*        <Image */}
-                        {/*            fill */}
-                        {/*            src={thumbnail} */}
-                        {/*            alt={title} */}
-                        {/*            className="w-full h-full object-cover object-top rounded-t-lg" */}
-                        {/*        />*/}
-                        {/*    </div>*/}
-                        {/*) : (*/}
-                        {/*    <FileText size="30px" />*/}
-                        {/*)}*/}
                         <FileText size="30px" />
                     </div>
                 </div>
@@ -144,20 +134,6 @@ const ResumeItem = (props: ResumeItemProps) => {
                         </DropdownMenu>
                     </div>
                     <div className="flex gap-2 items-center !text-[12px] font-medium text-muted-foreground">
-                        {/*<span className="flex items-center gap-[2px]">*/}
-                        {/*  {status === "private" ? (*/}
-                        {/*      <>*/}
-                        {/*          <Lock size="12px" />*/}
-                        {/*          Private*/}
-                        {/*      </>*/}
-                        {/*  ) : (*/}
-                        {/*      <>*/}
-                        {/*          <Globe size="12px" className="text-primary" />*/}
-                        {/*          Public*/}
-                        {/*      </>*/}
-                        {/*  )}*/}
-                        {/*</span>*/}
-                        {/*<Dot size="15px" />*/}
                         <FilePlus2 size="15px" />
                         <span>{format(updatedAt, "MMM dd, yyyy")}</span>
                     </div>

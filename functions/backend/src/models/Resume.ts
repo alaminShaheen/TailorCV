@@ -19,6 +19,7 @@ export class Resume {
     public userId: string;
     public title: string;
     public thumbnail: string;
+    public hasAnsweredQuestions: boolean;
 
 
     constructor(params: ResumeParameters) {
@@ -33,6 +34,7 @@ export class Resume {
         this.userId = params.userId;
         this.title = params.title || "Untitled Resume";
         this.thumbnail = params.thumbnail || "";
+        this.hasAnsweredQuestions = params.hasAnsweredQuestions;
     }
 
     static GET_EMPTY_RESUME() {
@@ -50,7 +52,8 @@ export class Resume {
             projects: [],
             education: [],
             userId: "",
-            thumbnail: ""
+            thumbnail: "",
+            hasAnsweredQuestions: false,
         });
 
     }
