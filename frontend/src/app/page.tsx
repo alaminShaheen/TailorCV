@@ -1,6 +1,25 @@
+"use client"
+
 import Image from "next/image";
+import { useAuthContext } from "@/contexts/AuthContext";
+import { redirect } from "next/navigation";
+import { ROUTES } from "@/constants/Routes";
+import { RefreshCcw } from "lucide-react";
+import { useEffect } from "react";
 
 export default function Home() {
+  const { authenticated, appLoading } = useAuthContext();
+
+  useEffect(() => {
+    if (!appLoading) {
+      redirect(authenticated ? ROUTES.ALL_RESUMES : ROUTES.LOGIN,);
+    }
+  }, [authenticated, appLoading]);
+
+  if (appLoading) return <RefreshCcw className="mr-2 h-4 w-4 animate-spin" />
+
+  if (!authenticated) return null;
+
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
