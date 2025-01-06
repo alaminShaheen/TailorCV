@@ -1,7 +1,7 @@
 ## TailorCV
 
 
-[TailorCV](https://tailor-cv-azure.vercel.app/) is a fullstack application for creating tailored resumes using AI
+[TailorCV](https://tailor-cv-azure.vercel.app/) is a fullstack application for creating job tailored resumes using AI
 
 ## :pancakes: Technology Stack
 
