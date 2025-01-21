@@ -31,4 +31,3 @@ export const APP_FIREBASE_SERVICE_CLIENT_X509_CERT_URL = String(process.env.APP_
 export const APP_FIREBASE_SERVICE_UNIVERSE_DOMAIN = String(process.env.APP_FIREBASE_SERVICE_UNIVERSE_DOMAIN) || "";
 
 export const OPENAI_API_KEY = String(process.env.OPENAI_API_KEY) || "";
-export const HUGGING_FACE_API_KEY = String(process.env.HUGGING_FACE_API_KEY) || "";
