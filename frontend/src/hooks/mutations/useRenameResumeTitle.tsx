@@ -5,7 +5,7 @@ import { useErrorHandler } from "@/hooks/useErrorHandler";
 import { ResumeMetadata } from "@/models/ResumeMetadata";
 import { QUERY_KEYS } from "@/constants/QueryKeys";
 import { renameResumeTitle } from "@/services/RenameResumeTitle";
-import { RenameResumeTitleRequest } from "@/services/RenameResumeTitleRequest";
+import { RenameResumeTitleRequest } from "@/models/services/RenameResumeTitleRequest";
 
 type UseDeleteResumeProps = {
     onSuccess?: (response: ResumeMetadata) => void;
